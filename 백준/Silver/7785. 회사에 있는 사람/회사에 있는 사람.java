@@ -2,29 +2,33 @@ import java.io.*;
 import java.util.*;
 
 
-public class Main {
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+public class Main{
+    public static void main(String[] args) throws IOException {
+        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+        String s=br.readLine();
+        StringTokenizer st=new StringTokenizer(s);
 
-		int n = sc.nextInt();
-		HashMap<String, String> map = new HashMap<String, String>();
+        int n=Integer.parseInt(st.nextToken());
+       
+        HashMap<String, String> map=new HashMap<String,String>();
 
-		for (int i = 0; i < n; i++) {
-			String name = sc.next();
-			String state = sc.next();
+        for(int i=0;i<n;i++){
+            s=br.readLine();
+            st=new StringTokenizer(s);
 
-			if (map.containsKey(name)) {
-				map.remove(name);
-			} else {
-				map.put(name, state);
-			}
-		}
+            String name=st.nextToken();
+            String state=st.nextToken();
 
-		ArrayList<String> list = new ArrayList<String>(map.keySet());
-		Collections.sort(list, Collections.reverseOrder());
-		
-		for(var li : list) {
-			System.out.print(li + " ");
-		}
-	}
+            if(map.containsKey(name)) {map.remove(name);}
+            else  map.put(name,state);
+        }
+        List<String> enter_people=new ArrayList<>(map.keySet());
+
+        Collections.sort(enter_people,Collections.reverseOrder());
+
+        for(String t: enter_people){
+            System.out.println(t);
+        }
+       
+    }
 }
