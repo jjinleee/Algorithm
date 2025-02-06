@@ -3,38 +3,30 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st=new StringTokenizer(br.readLine());
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st= new StringTokenizer(br.readLine());
 
         int m=Integer.parseInt(st.nextToken());
         int n=Integer.parseInt(st.nextToken());
-
-        ArrayList<Integer> primes=new ArrayList<>();
-
-    
-        //m이상 n이하
-        for(int i=m;i<=n;i++){
-            if(isPrime(i)){
-                    primes.add(i);
-            }
-        }
         
+        StringBuilder sb= new StringBuilder();
 
-        //소수 출력
-        for(long p:primes){
-            System.out.println(p);
+        for(int i=m;i<=n;i++){
+            if(isPrime(i)) sb.append(i).append("\n");
         }
 
+        System.out.println(sb.toString());
     }
 
-    //소수 판별 함수->런타임에러발생 
-    public static boolean isPrime(long n){
-        if(n<=1) return false;
-        if (n == 2) return true; // 2는 소수
-        if (n % 2 == 0) return false; // 2를 제외한 짝수는 소수가 아님
-        for (long i = 3; i * i <= n; i += 2) { // 홀수만 검사
-            if (n % i == 0) return false;
+    private static boolean isPrime(int i){
+        if(i<2) return false;
+        if(i==2) return true;
+        if(i%2==0) return false;
+        
+        for(int j=3;j<=Math.sqrt(i);j++){
+            if(i%j==0) return false;
         }
+        
         return true;
     }
 }
