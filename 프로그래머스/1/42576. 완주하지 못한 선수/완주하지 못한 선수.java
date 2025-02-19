@@ -2,16 +2,22 @@ import java.util.*;
 
 class Solution {
     public String solution(String[] participant, String[] completion) {
-        HashMap<String,Integer> hash=new HashMap<>();
+        String answer = "";
+        Map<String,Integer> p=new HashMap<>();
         
-        for(String s: completion){
-            hash.put(s,hash.getOrDefault(s,0)+1);
+        for(int i=0;i<participant.length;i++){
+            p.put(participant[i],p.getOrDefault(participant[i],0)+1);
         }
         
-        for(String s:participant){
-            if(hash.getOrDefault(s,0)==0) return s;
-            hash.put(s,hash.get(s)-1);
+        for(int i=0;i<completion.length;i++){
+            if(p.get(completion[i])==1){
+                p.remove(completion[i]);
+            } else p.replace(completion[i],p.get(completion[i])-1);
         }
-        return null;
+        
+
+        answer=p.keySet().iterator().next();
+        return answer;
+        
     }
 }
