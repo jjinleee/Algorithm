@@ -4,31 +4,21 @@ import java.util.*;
 public class Main{
     public static void main(String[] args) throws IOException {
         BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-        String s= br.readLine();
+        String s=br.readLine().toUpperCase(); //다대문자로만들어
 
-        //대소문자 구분없게하기위해
-        int[] arr=new int[26];
-
-        for(int i=0;i<s.length();i++){
-            //소문자일때
-            if('a'<=s.charAt(i)&&s.charAt(i)<='z'){
-                arr[s.charAt(i)-97]++;
-            } else{  //대문자일때
-                arr[s.charAt(i)-65]++;
-            }
+        int[] alpha=new int[26];
+        for(char c:s.toCharArray()){
+            alpha[c-'A']++;
         }
 
         int max=0;
         char maxChar='?';
 
         for(int i=0;i<26;i++){
-            if(arr[i]>max){
-                max=arr[i];
+            if(max<alpha[i]){
+                max=alpha[i];
                 maxChar=(char)(i+65);
-            }
-
-            //같으면 ?출력
-            else if(arr[i]==max){
+            } else if(max==alpha[i]){
                 maxChar='?';
             }
         }
