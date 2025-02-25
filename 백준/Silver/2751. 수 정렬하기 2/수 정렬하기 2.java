@@ -1,23 +1,27 @@
 import java.io.*;
 import java.util.*;
-
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class Main{
     public static void main(String[] args) throws IOException {
         BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb=new StringBuilder();
-        int N=Integer.parseInt(br.readLine());
-
-        List<Integer> arr=new ArrayList<>();
-
-        for(int i=0;i<N;i++){
-            arr.add(Integer.parseInt(br.readLine()));
+        BufferedWriter bw= new BufferedWriter(new OutputStreamWriter(System.out));
+        
+        int n=Integer.parseInt(br.readLine());
+        
+        int[] nums=new int[n];
+        for(int i=0;i<n;i++){
+            nums[i]=Integer.parseInt(br.readLine());
         }
-        Collections.sort(arr);
+        Arrays.sort(nums);
 
-        for(int value:arr){
-            sb.append(value).append('\n');
+        for(int i:nums){
+            bw.write(i+"\n");
         }
-        System.out.println(sb);
+        
+        bw.flush();
+        br.close();
+        bw.close();
     }
 }
