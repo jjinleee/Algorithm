@@ -3,25 +3,37 @@ import java.util.*;
 
 
 public class Main{
+    public static class Member{
+        int age;
+        String name;
+        int order;
+
+        public Member(int age, String name, int order){
+            this.age=age;
+            this.name=name;
+            this.order=order;
+        }
+    }
     public static void main(String[] args) throws IOException {
-        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+        int n=Integer.parseInt(br.readLine());
 
-        String[][] people=new String[N][2];
+        List<Member> list= new ArrayList<>();
 
-        for(int i=0;i<N;i++){
-            StringTokenizer st=new StringTokenizer(br.readLine());
-            people[i][0]=st.nextToken();
-            people[i][1]=st.nextToken();
+        for(int i=0;i<n;i++){
+            StringTokenizer st= new StringTokenizer(br.readLine());
+            int age=Integer.parseInt(st.nextToken());
+            String name=st.nextToken();
+            list.add(new Member(age, name, i));
         }
 
-        //정렬
-        Arrays.sort(people,( s1,  s2)->(Integer.parseInt(s1[0])==Integer.parseInt(s2[0]) ? Arrays.asList(people).indexOf(s1[1])-Arrays.asList(people).indexOf(s2[1]) :Integer.parseInt(s1[0])-Integer.parseInt(s2[0])));
+        list.sort((a,b)-> (a.age==b.age ? a.order-b.order : a.age-b.age));
 
-        
-        for(int i=0;i<N;i++){
-            System.out.println(people[i][0]+" "+people[i][1]);
+        StringBuilder sb= new StringBuilder();
+        for(Member m: list){
+            sb.append(m.age+" "+m.name+"\n");
         }
 
+        System.out.println(sb);
     }
 }
