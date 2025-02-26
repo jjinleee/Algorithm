@@ -1,39 +1,32 @@
 import java.io.*;
 import java.util.*;
 
-
-public class Main{
+public class Main {
     public static void main(String[] args) throws IOException {
-        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-        String s=br.readLine();
-        StringTokenizer st=new StringTokenizer(s);
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st= new StringTokenizer(br.readLine());
 
-        int N=Integer.parseInt(st.nextToken());
-        int M=Integer.parseInt(st.nextToken());
-
-        HashMap<String, Integer> pocketmon=new HashMap<>();
-        String[] names = new String[N + 1]; // 이름을 인덱스로 저장할 배열
-
-        for(int i=0;i<N;i++){
-            s=br.readLine();
-            pocketmon.put(s,i+1);
-            names[i+1] = s; // 인덱스에 해당하는 이름 저장
+        int n=Integer.parseInt(st.nextToken());
+        int m=Integer.parseInt(st.nextToken());
+        
+        Map<String,Integer> book=new HashMap<>();
+        String[] names=new String[n+1];
+        for(int i=0;i<n;i++){
+            String s= br.readLine();
+            book.put(s, i+1);
+            names[i+1]=s;
         }
 
-        String[] answer=new String[M];
-
-        for(int i=0;i<M;i++){
-            s=br.readLine();
-            if(s.chars().allMatch(Character::isDigit)){ // 숫자일 때
-                int num = Integer.parseInt(s);
-                answer[i]=names[num];
-            } else {   // 문자열일 때
-                answer[i]=Integer.toString(pocketmon.get(s));
+        StringBuilder sb= new StringBuilder();
+        for(int i=0;i<m;i++){
+            String s=br.readLine();
+            if(s.matches("\\d+")){
+                sb.append(names[Integer.parseInt(s)]+"\n");
+            } else{
+                sb.append(book.get(s)+"\n");
             }
         }
 
-        for(String pocket : answer){
-            System.out.println(pocket);
-        }
+        System.out.println(sb.toString());
     }
 }
