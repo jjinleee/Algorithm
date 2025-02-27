@@ -4,46 +4,31 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringTokenizer st= new StringTokenizer(br.readLine());
+        int a1=Integer.parseInt(st.nextToken());
+        int b1=Integer.parseInt(st.nextToken());
 
-        int a = Integer.parseInt(st.nextToken());
-        int b = Integer.parseInt(st.nextToken());
+        st=new StringTokenizer(br.readLine());
+        int a2=Integer.parseInt(st.nextToken());
+        int b2=Integer.parseInt(st.nextToken());
+        
+        int deno= b1*b2/gcd(b1,b2);
+        int mul1=deno/b1;
+        int mul2=deno/b2;
 
-        st = new StringTokenizer(br.readLine());
-        int a2 = Integer.parseInt(st.nextToken());
-        int b2 = Integer.parseInt(st.nextToken());
+        int mole=a1*mul1+a2*mul2;
 
-        // 최소공배수 구하기
-        int lcm = lcm(b, b2);
-
-        // 분자 조정
-        a = a * (lcm / b);
-        a2 = a2 * (lcm / b2);
-
-        // 분자 합산
-        int numerator = a + a2;
-        int denominator = lcm;
-
-        // 최대공약수를 구해 기약분수 만들기
-        int gcd = gcd(numerator, denominator);
-        numerator /= gcd;
-        denominator /= gcd;
-
-        System.out.println(numerator + " " + denominator);
-    }
-
-    // 최대공약수(GCD) 계산 함수
-    public static int gcd(int x, int y) {
-        while (y != 0) {
-            int temp = y;
-            y = x % y;
-            x = temp;
+        int check=gcd(mole,deno);
+        if(check>1){
+            mole/=check;
+            deno/=check;
         }
-        return x;
+        System.out.println(mole+" "+deno);
+        
     }
 
-    // 최소공배수(LCM) 계산 함수
-    public static int lcm(int x, int y) {
-        return x * (y / gcd(x, y));
+    public static int gcd(int a,int b){
+        if(b==0) return a;
+        else return gcd(b,a%b);
     }
 }
