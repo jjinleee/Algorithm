@@ -1,19 +1,17 @@
 import java.util.*;
 
 class Solution {
-    public ArrayList<Integer> solution(int[] numbers) {
-        ArrayList<Integer> answer=new ArrayList<>();
+    public int[] solution(int[] numbers) {
+        int[] answer = {};
+        List<Integer> sum=new ArrayList<>();
         for(int i=0;i<numbers.length-1;i++){
             for(int j=i+1;j<numbers.length;j++){
-                int sum=numbers[i]+numbers[j];
-                
-                if(!answer.contains(sum)){
-                    answer.add(sum);
-                }
+                int n=numbers[i]+numbers[j];
+                if(!sum.contains(n)) sum.add(n);
             }
         }
-        Collections.sort(answer);
+        Collections.sort(sum);
         
-        return answer;
+        return sum.stream().mapToInt(i->i).toArray();
     }
 }
