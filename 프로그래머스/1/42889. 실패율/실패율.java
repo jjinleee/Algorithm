@@ -2,27 +2,24 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int N, int[] stages) {
-
-
-        //스테이지별 도전자수
-        int[] challengers=new int[N+2];
-        for(int i=0;i<stages.length;i++){
-            challengers[stages[i]]++;
+        int[] answer = {};
+        
+        int people=stages.length;
+        int[] stagePeople=new int[N+2];
+        for(int i=0;i<people;i++){
+            stagePeople[stages[i]]+=1;
         }
         
-        //스테이지별 실패한 사용자 수
-        HashMap<Integer, Double> fails=new HashMap<>();
-        double total=stages.length;
-        
+        HashMap<Integer,Double> fail=new HashMap<>();
         for(int i=1;i<=N;i++){
-            if(challengers[i]==0) fails.put(i,0.);
+            if(stagePeople[i]==0) fail.put(i,0.);
             else{
-                fails.put(i,challengers[i]/total);
-                total-=challengers[i];
+                fail.put(i,stagePeople[i]/(double)people);
+                people-=stagePeople[i];
             }
         }
- 
         
-        return fails.entrySet().stream().sorted((o1,o2)->Double.compare(o2.getValue(), o1.getValue())).mapToInt(HashMap.Entry::getKey).toArray();
+        
+        return fail.entrySet().stream().sorted((a,b)->Double.compare(b.getValue(), a.getValue())).mapToInt(HashMap.Entry::getKey).toArray();
     }
 }
