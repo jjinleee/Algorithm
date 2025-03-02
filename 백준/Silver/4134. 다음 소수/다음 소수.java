@@ -1,46 +1,40 @@
 import java.io.*;
-import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int t = Integer.parseInt(br.readLine());  // 테스트 케이스 개수
+        StringBuilder sb = new StringBuilder();
 
-        int n=Integer.parseInt(br.readLine());
-        long[] nums=new long[n];
-        long[] prime=new long[n];
-
-        //수 입력받기
-        for(int i=0;i<n;i++){
-            nums[i]=Long.parseLong(br.readLine());   
+        for (int i = 0; i < t; i++) {
+            long n = Long.parseLong(br.readLine());  // 입력값을 long으로 받음
+            sb.append(findNextPrime(n)).append("\n");
         }
 
-        //n보다 같거나 큰 소수
-        for(int i=0;i<n;i++){
-            long j=nums[i];
-            while(true){
-                if(isPrime(j)){
-                    prime[i]=j;
-                    break;
-                }
-                j++;
-            }
-        }
-
-        //소수 출력
-        for(long p:prime){
-            System.out.println(p);
-        }
-
+        System.out.print(sb);
     }
 
-    //소수 판별 함수->런타임에러발생 
-    public static boolean isPrime(long n){
-        if(n<=1) return false;
-        if (n == 2) return true; // 2는 소수
-        if (n % 2 == 0) return false; // 2를 제외한 짝수는 소수가 아님
-        for (long i = 3; i * i <= n; i += 2) { // 홀수만 검사
-            if (n % i == 0) return false;
+    public static long findNextPrime(long n) {
+        if (n <= 2) return 2;
+        if (n % 2 == 0) n++; // 짝수면 다음 홀수부터 검사 (2 제외)
+
+        while (!isPrime(n)) {
+            n += 2; // 홀수만 검사
+            if (n < 0) return Long.MAX_VALUE; // 오버플로우 방지
         }
+
+        return n;
+    }
+
+    public static boolean isPrime(long n) {
+        if (n < 2) return false;
+        if (n == 2 || n == 3) return true;
+        if (n % 2 == 0 || n % 3 == 0) return false;
+
+        for (long i = 5; i * i <= n; i += 6) {
+            if (n % i == 0 || n % (i + 2) == 0) return false;
+        }
+
         return true;
     }
 }
