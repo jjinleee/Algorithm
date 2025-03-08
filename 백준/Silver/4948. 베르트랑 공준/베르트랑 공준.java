@@ -1,44 +1,36 @@
 import java.io.*;
-import java.util.*;
+import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        ArrayList<Integer> nums=new ArrayList<>();
-        ArrayList<Integer> primes=new ArrayList<>();
+        StringBuilder sb= new StringBuilder();
 
-
-        //수 입력받기
         while(true){
-            String s=br.readLine();
-            if(s.equals("0")) break;
-            nums.add(Integer.parseInt(s));
-        }
+            int cnt=0;
 
-
-        for(int i=0;i<nums.size();i++){
-            int count=0;
-            for(int j=nums.get(i)+1;j<=2*nums.get(i);j++){
-                if(isPrime(j)) count++;
+            int n=Integer.parseInt(br.readLine());
+            if(n==0) break;
+            for(int i=n+1;i<=2*n;i++){
+                if(isPrime(i)) cnt++;
             }
-            primes.add(count);
+
+            sb.append(cnt).append('\n');
         }
         
-        //소수 출력
-        for(long p:primes){
-            System.out.println(p);
-        }
-
+        
+        System.out.print(sb);
     }
 
-    //소수 판별 함수->런타임에러발생 
-    public static boolean isPrime(long n){
-        if(n<=1) return false;
-        if (n == 2) return true; // 2는 소수
-        if (n % 2 == 0) return false; // 2를 제외한 짝수는 소수가 아님
-        for (long i = 3; i * i <= n; i += 2) { // 홀수만 검사
-            if (n % i == 0) return false;
+    public static boolean isPrime(int n) {
+        if (n < 2) return false;
+        if (n == 2 || n == 3) return true;
+        if (n % 2 == 0 || n % 3 == 0) return false;
+
+        for (int i = 5; i * i <= n; i += 6) {
+            if (n % i == 0 || n % (i + 2) == 0) return false;
         }
+
         return true;
     }
 }
