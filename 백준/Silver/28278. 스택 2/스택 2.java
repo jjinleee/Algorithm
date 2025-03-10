@@ -1,44 +1,37 @@
 import java.io.*;
-import java.util.*;
+import java.util.Stack;
+import java.util.StringTokenizer;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw= new BufferedWriter(new OutputStreamWriter(System.out));
-        
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+        int n=Integer.parseInt(br.readLine());
 
-        int N=Integer.parseInt(br.readLine());
-        Stack<Integer> stack = new Stack<>();
+        StringBuilder sb= new StringBuilder();
+        Stack<Integer> stack= new Stack<>();
+        for(int i=0;i<n;i++){
+            StringTokenizer st= new StringTokenizer(br.readLine());
+            int a=Integer.parseInt(st.nextToken());
 
-        for(int i=0;i<N;i++){
-            StringTokenizer st=new StringTokenizer(br.readLine());
-            int order=Integer.parseInt(st.nextToken());
-
-            if(order==1){
-                int x=Integer.parseInt(st.nextToken());
-                stack.push(x);
-            } 
-            if(order==2){
-                if(stack.isEmpty()){
-                    bw.write("-1\n");
-                } else bw.write(stack.pop()+"\n");
+            if(a==1) stack.push(Integer.parseInt(st.nextToken()));
+            else if(a==2){
+                if(!stack.isEmpty()) {
+                    sb.append(stack.pop()).append('\n');
+                }
+                else sb.append(-1).append('\n');
             }
-            if(order==3){
-                bw.write(stack.size()+"\n");
-            } 
-            if(order==4){
-                if(!stack.isEmpty()){
-                    bw.write("0\n");
-                } else bw.write("1\n");
-            } 
-            if(order==5){
-                if(!stack.isEmpty()){
-                    bw.write(stack.peek()+"\n");
-                } else bw.write("-1\n");
-            } 
+            else if(a==3) sb.append(stack.size()).append('\n');
+            else if(a==4) {
+                if(stack.isEmpty()) sb.append(1).append('\n');
+                else sb.append(0).append('\n');
+            }
+            else if(a==5){
+                if(stack.isEmpty()) sb.append(-1).append('\n');
+                else sb.append(stack.peek()).append('\n');
+            }
         }
 
-
-        bw.flush();
+        System.out.println(sb.toString());
     }
 }
