@@ -1,48 +1,43 @@
 import java.io.*;
-import java.util.*;
+import java.util.Stack;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        List<String> result=new ArrayList<>();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb= new StringBuilder();
 
         while(true){
             String s=br.readLine();
             if(s.equals(".")) break;
 
-            if(isBalance(s)) result.add("yes");
-            else result.add("no");
+            boolean isValid=true;
 
-        }
-
-        for(String r:result){
-            System.out.println(r);
-        }
-    }
-
-    public static boolean isBalance(String t){
-        Stack<Character> data=new Stack<>();
-        for(int i=0;i<t.length();i++){{
-            char ch = t.charAt(i);
-
-            if (ch == '(') {
-                data.push('(');
-            } else if (ch == '[') {
-                data.push('[');
-            } else if (ch == ')') {
-                if (data.isEmpty() || data.peek() != '(') {
-                    return false;
+            Stack<Character> stack= new Stack<>();
+            for(char c: s.toCharArray()){
+                if(c=='[') stack.push('[');
+                else if(c=='(') stack.push('(');
+                else if(c==']'){
+                    if(!stack.isEmpty() && stack.peek()=='[') stack.pop();
+                    else {
+                        isValid=false;
+                        break;
+                    }
                 }
-                data.pop();
-            } else if (ch == ']') {
-                if (data.isEmpty() || data.peek() != '[') {
-                    return false;
+                else if(c==')'){
+                    if(!stack.isEmpty() && stack.peek()=='(') stack.pop();
+                    else{
+                        isValid=false;
+                        break;
+                    }
                 }
-                data.pop();
             }
-        }}
 
-        return data.isEmpty();
+            if(stack.isEmpty() && isValid) sb.append("yes").append('\n');
+            else sb.append("no").append('\n');
+        }
+        
+        System.out.println(sb);
     }
 }
