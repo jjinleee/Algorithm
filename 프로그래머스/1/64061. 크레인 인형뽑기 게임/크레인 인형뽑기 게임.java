@@ -6,29 +6,21 @@ class Solution {
         
         Stack<Integer> pocket=new Stack<>();
         
-        //인형들 저장
-        ArrayList<ArrayList<Integer>> dolls= new ArrayList<>();
-        for(int i=0;i<n;i++){
-            dolls.add(new ArrayList<>());
-            for(int j=0;j<n;j++){
-                int k=board[j][i];
-                if(k!=0) dolls.get(i).add(k);
-            }
-        }
-        
-        for(int i=0;i<moves.length;i++){
-            int col=moves[i]-1;
-            if(dolls.get(col).isEmpty()) continue;
-            else if(!pocket.isEmpty() && pocket.peek()==dolls.get(col).get(0)){
-                pocket.pop();
-                dolls.get(col).remove(0);
-                answer+=2;
-            }
-            else {
-                pocket.push(dolls.get(col).get(0));
-                dolls.get(col).remove(0);
-            }
+        for(int move:moves){
+            int col=move-1;
             
+            for(int row=0;row<n;row++){
+                if(board[row][col]!=0){
+                    int doll=board[row][col];
+                    board[row][col]=0;
+                    
+                    if(!pocket.isEmpty() && pocket.peek()==doll){
+                        pocket.pop();
+                        answer+=2;
+                    } else pocket.push(doll);
+                    break;
+                } 
+            }
         }
         return answer;
     }
