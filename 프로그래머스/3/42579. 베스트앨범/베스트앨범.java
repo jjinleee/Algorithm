@@ -1,46 +1,29 @@
 import java.util.*;
-
 class Solution {
     public int[] solution(String[] genres, int[] plays) {
-        int[] answer = {};
-        Map<String,Integer> playtime=new HashMap<>();
-        Map<String,List<Song>> genreSongs=new HashMap<>();
+        HashMap<String,Integer> topGenre=new HashMap<>();
+        //노래별 장르명, 고유번호, 재생횟수 저장
+        HashMap<String,List<int[]>> song=new HashMap<>();
         
         for(int i=0;i<genres.length;i++){
             String genre=genres[i];
-            int play=plays[i];
-            
-            playtime.put(genre,playtime.getOrDefault(genre,0)+play);
-            
-            genreSongs.putIfAbsent(genre,new ArrayList<>());
-            genreSongs.get(genre).add(new Song(i,play));
+            song.putIfAbsent(genre, new ArrayList<>());
+            song.get(genre).add(new int[]{i,plays[i]});
+            topGenre.put(genre,topGenre.getOrDefault(genre,0)+plays[i]);
         }
-        
-        List<String> sortedGenres=new ArrayList<>(playtime.keySet());
-        sortedGenres.sort((a,b)-> playtime.get(b)-playtime.get(a));
+        //장르 내림차순 정렬
+        List<String> sortedGenre=new ArrayList<>(topGenre.keySet());
+        sortedGenre.sort((a,b)->topGenre.get(b)-topGenre.get(a));
         
         List<Integer> result=new ArrayList<>();
-        
-        for(String genre: sortedGenres){
-            List<Song> songs=genreSongs.get(genre);
-            songs.sort((a,b)->b.play==a.play ? a.id-b.id: b.play-a.play);
+        for(String genre:sortedGenre){
+            List<int[]> songs=song.get(genre);
+            songs.sort((a,b)->b[1]==a[1]? a[0]-b[0]:b[1]-a[1]);
             
-            int cnt=0;
-            for(Song song:songs){
-                if(cnt++>=2) break;
-                result.add(song.id);
-            }
+            result.add(songs.get(0)[0]);
+            if(songs.size()>1)  result.add(songs.get(1)[0]);
+
         }
-        return result.stream().mapToInt(i->i).toArray();
-    }
-    
-    static class Song{
-        int id;
-        int play;
-        
-        Song(int id, int play){
-            this.id=id;
-            this.play=play;
-        }
+        return result.stream().mapToInt(i->i).toArray(); 
     }
 }
