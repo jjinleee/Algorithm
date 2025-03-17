@@ -1,23 +1,20 @@
 import java.util.*;
-
 class Solution {
     public String solution(String[] participant, String[] completion) {
-        String answer = "";
-        Map<String,Integer> p=new HashMap<>();
+        HashMap<String,Integer> player=new HashMap<>();
         
-        for(int i=0;i<participant.length;i++){
-            p.put(participant[i],p.getOrDefault(participant[i],0)+1);
+        for(String name: participant){
+            player.put(name, player.getOrDefault(name,0)+1);
+        }
+        for(String name: completion){
+            player.put(name, player.get(name)-1);
         }
         
-        for(int i=0;i<completion.length;i++){
-            if(p.get(completion[i])==1){
-                p.remove(completion[i]);
-            } else p.replace(completion[i],p.get(completion[i])-1);
+        String answer="";
+        for(String name: player.keySet()){
+            if(player.get(name)!=0) answer=name;
         }
         
-
-        answer=p.keySet().iterator().next();
         return answer;
-        
     }
 }
