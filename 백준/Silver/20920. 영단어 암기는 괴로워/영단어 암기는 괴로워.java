@@ -8,36 +8,26 @@ public class Main {
 
         int n=Integer.parseInt(st.nextToken());
         int m=Integer.parseInt(st.nextToken());
-
-        Map<String, Integer> dict=new HashMap<>();
-
+        
+        Map<String,Integer> words= new HashMap<>();
         for(int i=0;i<n;i++){
-            String s=br.readLine();
-            if(s.length()>=m) {
-                dict.put(s, dict.getOrDefault(s, 0)+1);
+            String word=br.readLine();
+            if(word.length()>=m){
+                words.put(word, words.getOrDefault(word, 0)+1);
             }
         }
 
-        List<String> wordList=new ArrayList<>(dict.keySet());
+        //자주나올수록 앞에, 단어의 길이 내림차순, 사전순
+        List<String> many=new ArrayList<>(words.keySet());
+        many.sort((a,b)->words.get(b)==words.get(a) ? (b.length()==a.length() ? a.compareTo(b) :b.length()-a.length()) : words.get(b)-words.get(a) );
 
 
-        StringBuilder sb=new StringBuilder();
-        
-        wordList.sort((a,b)->{
-            int freq=dict.get(b).compareTo(dict.get(a)); //1.빈도비교
-            if(freq==0){
-                int length=Integer.compare(b.length(),a.length());//2.길이비교
-                if(length==0) return a.compareTo(b);            //3.알파벳순
-                return length;
-            } 
-            return freq; 
-        });
-
-        for(String word :wordList){
-            sb.append(word).append('\n');
+        BufferedWriter bw= new BufferedWriter(new OutputStreamWriter(System.out));
+        for(String k:many){
+            bw.write(k);
+            bw.write('\n');
         }
-        
-        System.out.println(sb.toString());
 
+        bw.flush();
     }
 }
