@@ -2,41 +2,32 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb= new StringBuilder();
+    public static void main(String[] args) throws IOException{
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+        String line;
 
-        while(true){
-            String s=br.readLine();
-            if(s==null) break;
-            int n=Integer.parseInt(s);
-            int size=(int) Math.pow(3, n);
+        while((line=br.readLine())!=null){
+            int n=Integer.parseInt(line);
+            int length=(int)Math.pow(3, n);
+            char[] arr= new char[length];
 
-            char[] chars= new char[size];
+            Arrays.fill(arr, '-');
+            cantor(arr,0,length);
 
-            for(int i=0;i<size;i++){
-                chars[i]='-';
-            }
-
-            cant(chars,0,size);
-            sb.append(chars).append('\n');
+            System.out.println(new String(arr));
         }
-        System.out.println(sb);
-
     }
 
-    public static void cant(char[] canto, int start, int size){
-        if(size==1) return;
-
-        int div=size/3;
-
-        //중간 3등분 후 중간 삭제
+    //3등분해서 중간 없애기 
+     static void cantor(char[] c,int start, int length){
+        if(length<3) return;
+        
+        int div= length/3;
         for(int i=start+div;i<start+2*div;i++){
-            canto[i]=' ';
+            c[i]=' ';
         }
 
-        //좌우
-        cant(canto,start,div);
-        cant(canto,start+2*div,div);
-    }
+        cantor(c, start, div);
+        cantor(c, start+2*div, div);
+    } 
 }
