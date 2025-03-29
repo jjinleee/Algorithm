@@ -1,12 +1,20 @@
 import java.util.*;
-
 class Solution {
     public String solution(int[] numbers) {
-        String[] str=Arrays.stream(numbers).mapToObj(String::valueOf).toArray(String[]::new);
-        Arrays.sort(str,(a,b)->(b+a).compareTo(a+b));
+        String[] nums=new String[numbers.length];
+        for(int i=0;i<numbers.length;i++){
+            nums[i]=String.valueOf(numbers[i]);
+        }
         
-        if(str[0].equals("0")) return "0";
+        Arrays.sort(nums,(a,b)->(b+a).compareTo(a+b));
         
-        return String.join("",str);
+        if(nums[0].equals("0")) return "0";
+        StringBuilder sb= new StringBuilder();
+        
+        for(String s:nums){
+            sb.append(s);
+        }
+        
+        return sb.toString();
     }
 }
