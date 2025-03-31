@@ -2,41 +2,37 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int n;
+    static int[] board;
     static int cnt=0;
-    static int[] queens;
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
         BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
-
-        n=Integer.parseInt(br.readLine());
-        queens= new int[n];
         
-        backtrack(0);
+        int n=Integer.parseInt(br.readLine());
+        board= new int[n];
+
+        nqueen(0,n);
         System.out.println(cnt);
-
-        
     }
 
-    public static void backtrack(int row){
+    static void nqueen(int row, int n){
         if(row==n){
             cnt++;
             return;
         }
 
         for(int col=0;col<n;col++){
-            if(isok(row,col)){
-                queens[row]=col;
-                backtrack(row+1);
-            }
+            board[row]=col;
+            if(isSafe(row)) nqueen(row+1, n);
         }
-        
-    }  
-    public static boolean isok(int row, int col){
+    }
+
+    static boolean isSafe(int row){
         for(int i=0;i<row;i++){
-            if(queens[i]==col || Math.abs(row-i)==Math.abs(col-queens[i])){
+            if(board[i]==board[row]|| Math.abs(board[row]-board[i])==row-i){
                 return false;
             }
         }
         return true;
-    }  
+    }
+    
 }
