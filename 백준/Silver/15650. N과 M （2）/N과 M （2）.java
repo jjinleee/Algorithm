@@ -2,36 +2,33 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int N, M;
-    static int[] sequence;
-    static StringBuilder sb = new StringBuilder();
+    static int n,m;
+    static int[] arr;
+    static StringBuilder sb= new StringBuilder();
+    public static void main(String[] args) throws IOException{
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st= new StringTokenizer(br.readLine());
+        
+        n=Integer.parseInt(st.nextToken());
+        m=Integer.parseInt(st.nextToken());
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        
-        sequence = new int[M];
-        
-        backtrack(1, 0);
-        
-        System.out.println(sb.toString());
+        arr=new int[m];
+        backtrack(1,0);
+
+        System.out.println(sb);
     }
-
-    // 백트래킹 함수
-    public static void backtrack(int start, int depth) {
-        if (depth == M) {
-            for (int i = 0; i < M; i++) {
-                sb.append(sequence[i]).append(' ');
+    static void backtrack(int start, int dept){
+        if(dept==m){
+            for(int s:arr){
+                sb.append(s).append(" ");
             }
-            sb.append('\n');
+            sb.append("\n");
             return;
         }
 
-        for (int i = start; i <= N; i++) {
-            sequence[depth] = i;
-            backtrack(i + 1, depth + 1);  
+        for(int i=start;i<=n;i++){
+            arr[dept]=i;
+            backtrack(i+1, dept+1);
         }
     }
 }
