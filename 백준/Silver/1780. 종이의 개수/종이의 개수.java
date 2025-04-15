@@ -1,64 +1,69 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
-    public static int a;
-    public static int b;
-    public static int c;
-    public static int[][] paper;
-    public static StringBuilder sb= new StringBuilder();
+
+public class Main { 
+    static int[][] paper;
+    static int c1=0;
+    static int c2=0;
+    static int c3=0;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n=Integer.parseInt(br.readLine());
-        paper=new int[n][n];
 
+        paper=new int[n][n];
         for(int i=0;i<n;i++){
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < n; j++) {
-                paper[i][j] = Integer.parseInt(st.nextToken());
+            StringTokenizer st= new StringTokenizer(br.readLine());
+            for(int j=0;j<n;j++){
+                paper[i][j]=Integer.parseInt(st.nextToken());
             }
         }
 
-        divide(0,0,n);
-        System.out.println(a);     
-        System.out.println(b);        
-        System.out.println(c);        
+        cut(n,0,0);
+
+        System.out.println(c1);
+        System.out.println(c2);
+        System.out.println(c3);
+        
     }
 
-    public static void divide(int row,int col, int size){
-        if(check(row,col,size)){
-            if(paper[row][col]==-1) {
-                a++;
-            }
-            else if(paper[row][col]==0){
-                b++;
-            } else c++;
+    static void cut(int n, int x, int y){
+        if(isSame(n, x, y)) {
+            if(paper[x][y]==0){
+                c2++;
+            } else if(paper[x][y]==-1){
+                c1++;
+            } else c3++;
             return;
         }
 
-        int newSize=size/3;
+        int newSize=n/3;
 
-        divide(row,col,newSize);
-        divide(row, col+newSize, newSize);
-        divide(row, col+2*newSize, newSize);
-        divide(row+newSize, col, newSize);
-        divide(row+newSize, col+newSize, newSize);
-        divide(row+newSize, col+2*newSize, newSize);
-        divide(row+2*newSize, col, newSize);
-        divide(row+2*newSize, col+newSize, newSize);
-        divide(row+2*newSize, col+2*newSize, newSize);
+
+        cut(newSize, x, y);
+        cut(newSize, x, y+newSize);
+        cut(newSize, x, y+newSize*2);
+        cut(newSize, x+newSize, y);
+        cut(newSize, x+newSize, y+newSize);
+        cut(newSize, x+newSize, y+newSize*2);
+        cut(newSize, x+newSize*2, y);
+        cut(newSize, x+newSize*2, y+newSize);
+        cut(newSize, x+newSize*2, y+newSize*2);
+
     }
-    
-    public static boolean check(int row, int col, int size){
-        int num=paper[row][col];
 
-        for(int i=row;i<row+size;i++){
-            for(int j=col;j<col+size;j++){
-                if(paper[i][j]!=num){
+    static boolean isSame(int n, int x, int y){
+        int color=paper[x][y];
+
+        for(int i=x;i<x+n;i++){
+            for(int j=y;j<y+n;j++){
+                if(paper[i][j]!=color){
                     return false;
                 }
             }
         }
+
         return true;
     }
+
 }
