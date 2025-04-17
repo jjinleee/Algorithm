@@ -1,61 +1,67 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
-    static int n;
-    static int[][] A;
 
+public class Main { 
+    static long b;
+    static int n;
+    
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st= new StringTokenizer(br.readLine());
 
-        n= Integer.parseInt(st.nextToken());
-        long b= Long.parseLong(st.nextToken());
+        n=Integer.parseInt(st.nextToken());
+        b=Long.parseLong(st.nextToken());
+        int[][] matrix=new int[n][n];
 
-        A=new int[n][n];
         for(int i=0;i<n;i++){
             st=new StringTokenizer(br.readLine());
             for(int j=0;j<n;j++){
-                A[i][j]=Integer.parseInt(st.nextToken())%1000;
+                matrix[i][j]=Integer.parseInt(st.nextToken());
             }
         }
-
-        int[][] result=pow(A,b);
+        int[][] result=power(matrix, b);
 
         StringBuilder sb= new StringBuilder();
-
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                sb.append(result[i][j]+" ");
+        for(int[] row: result){
+            for(int num : row){
+                sb.append(num%1000).append(" ");
             }
             sb.append("\n");
         }
 
         System.out.println(sb);
-    } 
-
-    public static int[][] pow(int[][] A, long exp){
-        if(exp==1) return A;
-        int[][] temp=pow(A,exp/2);
-        temp=multi(temp, temp);
-
-        if(exp%2!=0){
-            temp=multi(temp, A);
+        
+    }
+    //행렬 거듭제곱
+    static int[][] power(int[][] matrix, long exp){
+        if(exp==1L){
+            return matrix;
         }
-        return temp;
+
+        int[][] half=power(matrix, exp/2);
+        int[][] res=multiply(half, half);
+
+        if(exp%2==1L){
+            res=multiply(res, matrix);
+        }
+        return res;
     }
 
-    public static int[][] multi(int[][] A1, int[][] A2){
-        int[][] mul=new int[n][n];
+    static int[][] multiply(int[][] a, int[][] b){
+        int[][] result=new int[n][n];
 
         for(int i=0;i<n;i++){
             for(int j=0;j<n;j++){
-                for(int t=0;t<n;t++){
-                    mul[i][j]+=A1[i][t]*A2[t][j]%1000;
-                    mul[i][j]%=1000;
+                int sum=0;
+                for(int k=0;k<n;k++){
+                    sum+=(a[i][k]*b[k][j]);
                 }
+                result[i][j]=sum%1000;
             }
         }
-        return mul;
+
+        return result;
     }
+   
 }
