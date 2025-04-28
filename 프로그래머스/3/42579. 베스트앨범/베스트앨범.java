@@ -1,29 +1,55 @@
 import java.util.*;
+
 class Solution {
     public int[] solution(String[] genres, int[] plays) {
-        HashMap<String,Integer> topGenre=new HashMap<>();
-        //노래별 장르명, 고유번호, 재생횟수 저장
-        HashMap<String,List<int[]>> song=new HashMap<>();
+        Map<String,Integer> genreTotal=new HashMap<>(); //장르별 재생수
+        Map<String, List<Song>> music=new HashMap<>(); //장르별 노래목록
         
+        //노래데이터저장
         for(int i=0;i<genres.length;i++){
             String genre=genres[i];
-            song.putIfAbsent(genre, new ArrayList<>());
-            song.get(genre).add(new int[]{i,plays[i]});
-            topGenre.put(genre,topGenre.getOrDefault(genre,0)+plays[i]);
-        }
-        //장르 내림차순 정렬
-        List<String> sortedGenre=new ArrayList<>(topGenre.keySet());
-        sortedGenre.sort((a,b)->topGenre.get(b)-topGenre.get(a));
-        
-        List<Integer> result=new ArrayList<>();
-        for(String genre:sortedGenre){
-            List<int[]> songs=song.get(genre);
-            songs.sort((a,b)->b[1]==a[1]? a[0]-b[0]:b[1]-a[1]);
+            int play=plays[i];
             
-            result.add(songs.get(0)[0]);
-            if(songs.size()>1)  result.add(songs.get(1)[0]);
-
+            //장르별 총 재생수 누적
+            genreTotal.put(genre, genreTotal.getOrDefault(genre,0)+play);
+            //장르별 노래 리스트에 추가
+            List<Song> list=music.getOrDefault(genre, new ArrayList<>());
+            list.add(new Song(i,play)); //song객체(노래번호, 재생수)
+            music.put(genre,list); //map에 다시 저장
         }
-        return result.stream().mapToInt(i->i).toArray(); 
+        //장르를 재생수 기준으로 내림차순
+        List<String> genreSorted=new ArrayList<>(genreTotal.keySet());
+        genreSorted.sort((a,b)->genreTotal.get(b)-genreTotal.get(a));
+            
+        List<Integer> answer=new ArrayList<>();
+            
+        //장르별 작업
+        for(String genre:genreSorted){
+            List<Song> list=music.get(genre);
+            
+            //해당 장르의 노래를 재생수 내림차순(같으면 고유번호 오름차순)
+            list.sort((a,b)->{
+                if(b.plays==a.plays) return a.index-b.index;
+                return b.plays-a.plays;
+            });
+            
+            answer.add(list.get(0).index); //첫번째노래
+            if(list.size()>1) answer.add(list.get(1).index); //두번째노래
+        }
+        
+
+        //int[]로 변환
+        return answer.stream().mapToInt(i->i).toArray();
+    }
+}
+
+//노래정보 
+class Song{
+    int index; //고유번호
+    int plays; //재생수
+    
+    Song(int index, int plays){
+        this.index=index;
+        this.plays=plays;
     }
 }
