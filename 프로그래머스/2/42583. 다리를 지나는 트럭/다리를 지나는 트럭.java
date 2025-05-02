@@ -3,29 +3,29 @@ import java.util.*;
 class Solution {
     public int solution(int bridge_length, int weight, int[] truck_weights) {
         int answer = 0;
-        Queue<Integer> bridge=new LinkedList<>();
+        Queue<int[]> queue=new LinkedList<>(); //트럭무게,다리진입시간
         int time=0;
         int totalWeight=0;
+        int index=0; //다음에올라갈 트럭 인덱스
         
-        for(int i=0;i<bridge_length;i++){
-            bridge.offer(0);
-        }
-        
-        for(int truck:truck_weights){
-            while(true){
-                totalWeight-=bridge.poll();
-                
-                if(totalWeight+truck<=weight){
-                    bridge.offer(truck);
-                    totalWeight+=truck;
-                    time++;
-                    break;
-                } else {
-                    bridge.offer(0);
-                    time++;
-                }
+        while(index<truck_weights.length || !queue.isEmpty()){
+            time++;
+            
+            //다리를 다 건넜으면 제거
+            if(!queue.isEmpty() && time-queue.peek()[1]>=bridge_length){
+                totalWeight-=queue.poll()[0];
+            }
+            
+            //다음트럭이 올라올수있으면 올림
+            if(index<truck_weights.length && totalWeight + truck_weights[index]<=weight){
+                queue.offer(new int[]{truck_weights[index],time});
+                totalWeight+=truck_weights[index];
+                index++;
             }
         }
-        return time+bridge_length;
+        
+        return time;
+        
+        
     }
 }
