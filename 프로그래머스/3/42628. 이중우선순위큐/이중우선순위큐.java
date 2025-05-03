@@ -1,34 +1,29 @@
 import java.util.*;
+
 class Solution {
     public int[] solution(String[] operations) {
         int[] answer = {0,0};
-        int n=operations.length;
+        PriorityQueue<Integer> pq=new PriorityQueue<>();
+        PriorityQueue<Integer> pq2=new PriorityQueue<>(Collections.reverseOrder());
         
-        PriorityQueue<Integer> minHeap=new PriorityQueue<>();
-        PriorityQueue<Integer> maxHeap=new PriorityQueue<>(Collections.reverseOrder());
-
-        for(int i=0;i<n;i++){
-            String[] command= operations[i].split(" ");
-            
-            //숫자 삽입
-            if(command[0].equals("I")){
-                minHeap.add(Integer.parseInt(command[1]));
-                maxHeap.add(Integer.parseInt(command[1]));
-                
-            } //최솟값 삭제
-            else if(!minHeap.isEmpty() && command[0].equals("D") && command[1].equals("-1")){
-                int min=minHeap.poll();
-                maxHeap.remove(min);
-            } //최댓값 삭제
-            else if(!minHeap.isEmpty()){
-                int max=maxHeap.poll();
-                minHeap.remove(max);
+        for(String o : operations){
+            //최댓값 삭제
+            if(!pq.isEmpty() && o.equals("D 1")){
+                pq.remove(pq2.poll());
+            }
+            //최솟값 삭제
+            else if (!pq.isEmpty() && o.equals("D -1")){
+                pq2.remove(pq.poll());
+            } else if(o.contains("I")){
+                int num= Integer.parseInt(o.split(" ")[1]);
+                pq.add(num);
+                pq2.add(num);
             }
         }
-        
-        if(!minHeap.isEmpty()){
-            answer=new int[]{maxHeap.peek(),minHeap.peek()};
-        }
+        if(!pq.isEmpty()){
+            answer[0]=pq2.peek();
+            answer[1]=pq.peek();
+        } 
         
         return answer;
     }
