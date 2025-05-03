@@ -1,29 +1,31 @@
 import java.util.*;
 
+
 class Solution {
     public int solution(int[][] jobs) {
-        int answer = 0;
+        
+        Arrays.sort(jobs, (a,b)->a[0]-b[0]); //요청시각 기준 정렬
+        
+        PriorityQueue<int[]> pq=new PriorityQueue<>((a,b)->a[1]-b[1]);//소요시간 짧은순
+        
         int time=0;
         int idx=0;
+        int total=0;
         int cnt=0;
-            
-        //요청 시각 오름차순
-        Arrays.sort(jobs, Comparator.comparing(a->a[0]));
-        //소요시간
-        PriorityQueue<int[]> pq=new PriorityQueue<>(Comparator.comparingInt(a->a[1]));
         
         while(cnt<jobs.length){
             while(idx<jobs.length && jobs[idx][0]<=time){
-                pq.add(jobs[idx++]);
+                pq.offer(jobs[idx++]);
             }
             
             if(!pq.isEmpty()){
-                int[] job=pq.poll();
-                time+=job[1];
-                answer+=time-job[0];
+                int[] cur=pq.poll();
+                time+=cur[1]; //현재시간+작업소요시간
+                total+=(time-cur[0]); //작업종료시간-요청시각
                 cnt++;
-            } else time=jobs[idx][0];
+            } else time=jobs[idx][0]; //처리할 작업 없으면 다음 작업시각으로 이동
         }
-        return answer/jobs.length;
+        
+        return total/jobs.length;
     }
 }
