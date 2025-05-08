@@ -1,26 +1,25 @@
+import java.util.*;
+
 class Solution {
     public int solution(int[][] sizes) {
         int answer = 0;
-        int length=sizes.length;
-        
-        for(int i=0;i<length;i++){
-            if(sizes[i][0]<sizes[i][1]){
-                int temp=sizes[i][0];
-                sizes[i][0]=sizes[i][1];
-                sizes[i][1]=temp;
-            }
+        //가로세로 오름차순 정렬
+        for(int s[]:sizes){
+            Arrays.sort(s);
         }
+        int n=sizes.length;
         
-        int maxWidth=sizes[0][0];
-        int maxHeight=sizes[0][1];
-        
-        for(int i=0;i<length;i++){
-            if(maxWidth<sizes[i][0]) maxWidth=sizes[i][0];
-            if(maxHeight<sizes[i][1]) maxHeight=sizes[i][1];
-        }
-        
-        
+        int[] width=new int[n];
+        int[] height=new int[n];
 
-        return maxWidth*maxHeight;
+        for(int i=0;i<n;i++){
+            width[i]=sizes[i][0];
+            height[i]=sizes[i][1];
+        }
+        Arrays.sort(width);
+        Arrays.sort(height);
+        
+        
+        return width[n-1]*height[n-1];
     }
 }
