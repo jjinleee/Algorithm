@@ -1,48 +1,23 @@
 import java.util.*;
 
 class Solution {
+    static boolean[] visited;
+    static int answer=0;
     public int solution(int k, int[][] dungeons) {
-        int answer = -1;
-        int n=dungeons.length;
-        int[] orders= new int[n];
-        for(int i=0;i<n;i++){
-            orders[i]=i;
-        }
-        boolean[] visited= new boolean[n];
-        List<int[]> result=new ArrayList<>();
+        visited=new boolean[dungeons.length];
+        dfs(k,dungeons,0);
         
-        //순서 순열구함
-        dfs(orders, new ArrayList<>(), visited, result);
-        
-        
-        //구한 순서별로 카운트세서 최대구함
-        int max=0;
-        for(int[] o : result){
-            int cnt=0;
-            int curk=k;
-            for(int or : o){
-                if(curk>=dungeons[or][0]){
-                    curk-=dungeons[or][1];
-                    cnt++;
-                } else break;
-                if(max<cnt) max=cnt;
-            }
-        }
-
-        return max;
+        return answer;
     }
-    static void dfs(int[] orders,List<Integer> current, boolean[] visited, List<int[]> result){
-        if(current.size()==orders.length){
-            result.add(current.stream().mapToInt(i->i).toArray());
-            return;
-        }
+    static void dfs(int tired, int[][] dungeons, int ans){
+        answer=Math.max(ans, answer);
         
-        for(int i=0;i<orders.length;i++){
-            if(!visited[i]){
+        if(ans==dungeons.length) return;
+        
+        for(int i=0;i<dungeons.length;i++){
+            if(!visited[i] && dungeons[i][0]<=tired){
                 visited[i]=true;
-                current.add(orders[i]);
-                dfs(orders,current ,visited, result);
-                current.remove(current.size() - 1);
+                dfs(tired-dungeons[i][1], dungeons, ans+1);
                 visited[i]=false;
             }
         }
