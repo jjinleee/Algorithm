@@ -15,18 +15,6 @@ class Solution {
             if(l==0) zero++;
             if(win.contains(l)) correct++;
         }
-        //모두 0일때
-        if(zero==6) {
-            answer[0]=1;
-            answer[1]=6;
-            return answer;    
-        }
-        //모두 맞췄을때
-        if(correct==6){
-            answer[0]=1;
-            answer[1]=1;
-            return answer;
-        } 
         
         //최소=맞춘개수, 최대=모르는 숫자 개수 + 맞춘 개수
         int max=zero+correct;
