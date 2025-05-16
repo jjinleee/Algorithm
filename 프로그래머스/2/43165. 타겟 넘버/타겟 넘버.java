@@ -1,24 +1,20 @@
-import java.util.*; 
-
+import java.util.*;
 class Solution {
-    static int answer=0;
+    static int answer = 0;
     public int solution(int[] numbers, int target) {
-        
-        dfs(numbers, 0, 0, target);
+        dfs(0,numbers,0,target);
         
         return answer;
     }
-    
-    static void dfs(int[] numbers, int depth, int sum, int target){
+    static void dfs(int sum, int[] numbers, int depth, int target){
+        //다 도달했으면 정답여부 체크
         if(depth==numbers.length){
-            if(sum==target){
-                answer++;
-            }
+            if(sum==target) answer++;
             return;
         }
         
-        dfs(numbers, depth+1, sum+numbers[depth], target);
-        dfs(numbers, depth+1, sum-numbers[depth], target);
-
+        //하나는 더하고 하나는 뺌
+        dfs(sum-numbers[depth],numbers,depth+1, target);
+        dfs(sum+numbers[depth],numbers,depth+1, target);
     }
 }
