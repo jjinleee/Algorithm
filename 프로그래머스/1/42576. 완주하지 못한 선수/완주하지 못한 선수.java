@@ -2,23 +2,19 @@ import java.util.*;
 
 class Solution {
     public String solution(String[] participant, String[] completion) {
-        String answer = "";
-        HashMap<String,Integer> people=new HashMap<>();
-        for(String p:participant){
-            people.put(p, people.getOrDefault(p,0)+1);
+        
+        //동명이인있으니까 해시로 카운트->0이 아닌 사람은 완주못한 사람
+        Map<String,Integer> p=new HashMap<>();
+        for(String person : participant){
+            p.put(person, p.getOrDefault(person,0)+1);
+        }
+        for(String c : completion){
+            p.put(c, p.get(c)-1);
         }
         
-        for(String c:completion){
-           int n= people.get(c);
-            people.remove(c);
-            people.put(c,--n);
+        for(String name: p.keySet()){
+            if(p.get(name)!=0) return name;
         }
-        
-        for(String a:people.keySet()){
-            if(people.get(a)!=0){
-                answer=a;
-            }
-        }
-        return answer;
+        return "0";
     }
 }
