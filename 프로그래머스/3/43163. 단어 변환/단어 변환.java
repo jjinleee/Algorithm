@@ -1,38 +1,52 @@
 import java.util.*;
 
 class Solution {
-    int min = Integer.MAX_VALUE;
-
     public int solution(String begin, String target, String[] words) {
-        boolean[] visited = new boolean[words.length];
-        dfs(begin, target, words, visited, 0);
-
-        // target에 도달한 적 없다면 0 리턴
-        return min == Integer.MAX_VALUE ? 0 : min;
-    }
-
-    void dfs(String current, String target, String[] words, boolean[] visited, int depth) {
-        if (current.equals(target)) {
-            min = Math.min(min, depth);
-            return;
-        }
-
-        for (int i = 0; i < words.length; i++) {
-            if (!visited[i] && canConvert(current, words[i])) {
-                visited[i] = true;
-                dfs(words[i], target, words, visited, depth + 1);
-                visited[i] = false; // 백트래킹
+        //단어에 타겟없으면 바로 반환
+        if(!Arrays.asList(words).contains(target)) return 0;
+        
+        //큐에넣고 방문배열
+        Queue<Word> queue=new LinkedList<>();
+        boolean[] visited=new boolean[words.length];
+        queue.offer(new Word(begin,0));
+        
+        while(!queue.isEmpty()){
+            Word current=queue.poll();
+            //타겟에 도착시 반환
+            if(current.word.equals(target)) return current.depth;
+            
+            for(int i=0;i<words.length;i++){
+                //방문도안했고 한글자만 다르다면 큐에넣음
+                if(!visited[i] && isDifferent(current.word,words[i])){
+                    queue.offer(new Word(words[i],current.depth+1));
+                    visited[i]=true;
+                }                
             }
+
         }
+        
+        return 0;
     }
-
-    boolean canConvert(String a, String b) {
-        int diff = 0;
-
-        for (int i = 0; i < a.length(); i++) {
-            if (a.charAt(i) != b.charAt(i)) diff++;
+    
+    //한글자만 다른지 확인
+    static boolean isDifferent(String a, String b){
+        int cnt=0;
+        for(int i=0;i<a.length();i++){
+            if(a.charAt(i)!=b.charAt(i)) cnt++;
         }
-
-        return diff == 1;
+        if(cnt>1) return false;
+        else return true;
     }
+    
+    //word 클래스
+    class Word{
+        String word;
+        int depth;
+        
+        Word(String word, int depth){
+            this.word=word;
+            this.depth=depth;
+        }
+        
+    } 
 }
