@@ -1,44 +1,37 @@
 import java.util.*;
 
 class Solution {
-    static boolean[] used;
-    static List<String> result;
+    static List<String> list=new ArrayList<>();
+    static boolean[] visited;
     public String[] solution(String[][] tickets) {
-        int n=tickets.length;
-        used= new boolean[n];
-        result= new ArrayList<>();
+        visited=new boolean[tickets.length];
+        list.add("ICN");
         
-        //티켓 사전순 정렬
-        Arrays.sort(tickets, ((a,b)-> a[0].equals(b[0])? a[1].compareTo(b[1]) : a[0].compareTo(b[0])));
-        List<String> path=new ArrayList<>();
-        path.add("ICN");
+        //티켓정렬
+        Arrays.sort(tickets, (a,b)->a[0].equals(b[0]) ?  a[1].compareTo(b[1]):  a[0].compareTo(b[0]));
         
-        dfs("ICN", path, tickets);
-        
-        
-        return result.toArray(new String[0]);
+        dfs(tickets, "ICN", list);
+        return list.toArray(new String[0]);
     }
-    
-    static boolean dfs(String curr,List<String> path, String[][] tickets ){
-        if(path.size()==tickets.length+1){
-            result=new ArrayList<>(path);
+    static boolean dfs(String[][] tickets,String current, List<String> path){
+        //도달했을시
+        if(list.size()==tickets.length+1){
+            list=new ArrayList<>(path);
             return true;
         }
         
-        for (int i = 0; i < tickets.length; i++) {
-            if (!used[i] && tickets[i][0].equals(curr)) {
-                used[i] = true;
+        for(int i=0;i<tickets.length;i++){
+            if(!visited[i] && tickets[i][0].equals(current)){
+                visited[i]=true;
                 path.add(tickets[i][1]);
-                
+                if(dfs(tickets, tickets[i][1], path)) return true;
                 //백트래킹
-                if(dfs(tickets[i][1], path, tickets)){
-                    return true;
-                }
-                used[i] = false; 
+                visited[i]=false;
                 path.remove(path.size()-1);
             }
-    }
+        }
         return false;
+        
         
     }
 }
