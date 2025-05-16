@@ -2,15 +2,20 @@ import java.util.*;
 
 class Solution {
     public int solution(String[][] clothes) {
-        int answer = 1;
-        Map<String,Integer> map= new HashMap<>();
-        for(String[] c:clothes){
-            map.put(c[1],map.getOrDefault(c[1],0)+1);
+        int answer = 0;
+        //종류별로 map에 넣어줌
+        Map<String,Integer> map=new HashMap<>();
+        for(String[] c : clothes){
+            String type=c[1];
+            map.put(type,map.getOrDefault(type,0)+1);
+        }
+        //옷 조합(각 원소 합+원소 곱)
+        int mul=1;
+        for(String m : map.keySet()){
+            int cnt=map.get(m);
+            mul*=(cnt+1); //원소곱 (안입는 경우의 수도 포함)
         }
         
-        for(String k:map.keySet()){
-            answer*=(map.get(k)+1);
-        }
-        return --answer;
+        return mul-1;
     }
 }
