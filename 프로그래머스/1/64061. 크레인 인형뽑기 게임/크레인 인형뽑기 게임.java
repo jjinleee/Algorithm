@@ -1,27 +1,31 @@
 import java.util.*;
+
 class Solution {
     public int solution(int[][] board, int[] moves) {
         int answer = 0;
-        int n=board.length;
+        int row=board.length;
+        int col=board[0].length;
         
-        Stack<Integer> pocket=new Stack<>();
-        
-        for(int move:moves){
-            int col=move-1;
-            
-            for(int row=0;row<n;row++){
-                if(board[row][col]!=0){
-                    int doll=board[row][col];
-                    board[row][col]=0;
-                    
-                    if(!pocket.isEmpty() && pocket.peek()==doll){
-                        pocket.pop();
+        Stack<Integer> stack=new Stack<>(); //내가뽑은인형쌓음
+        for(int i=0;i<moves.length;i++){
+            int pickCol=moves[i]-1; //뽑을열
+            for(int j=0;j<row;j++){
+                int num=board[j][pickCol];
+                //0이 아니면 뽑고 0으로 변경
+                if(num!=0){
+                    //같으면 터뜨림
+                    if(!stack.isEmpty() && stack.peek()==num) {                   
+                        stack.pop();
                         answer+=2;
-                    } else pocket.push(doll);
-                    break;
-                } 
-            }
+                    } else stack.push(num);
+                    
+                    //뽑은건 0으로 변경
+                    board[j][pickCol]=0;
+                    break; //하나뽑았으면 그만
+                }
+            }    
         }
+        
         return answer;
     }
 }
