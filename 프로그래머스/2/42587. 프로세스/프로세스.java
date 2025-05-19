@@ -2,33 +2,28 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] priorities, int location) {
-        int answer = 0;
-        int n=priorities.length;
-        
         Queue<int[]> queue=new LinkedList<>();
-        for(int i=0;i<n;i++){
-            //우선순위, 인덱스 저장
-            queue.add(new int[]{priorities[i],i});
+        for(int i=0;i<priorities.length;i++){
+            queue.offer(new int[]{i,priorities[i]});
         }
         
+        int order=1;
         while(!queue.isEmpty()){
-            int[] cur=queue.poll();
-            boolean high=false;
+            int[] current=queue.poll();
             
-            for(int[] p:queue){
-                if(p[0]>cur[0]){    //큐안에 우선순위가 더높은게있는지확인
-                    high=true;
-                    break;
-                }
-            }
+            // 뒤에 더 높은 우선순위가 있는지 확인 stream, anyMatch 사용
+            boolean hasHigher = queue.stream().anyMatch(p -> p[1] > current[1]);
             
-            if(high){ //있으면 큐에 다시 넣기
-                queue.add(cur);
+            if(hasHigher){
+                queue.offer(current); //맨뒤로보냄
             } else{
-                answer++; 
-                if(cur[1]==location) return answer; //없고 찾는 location이면 return
+                if(current[0]==location){ //location 차례가 오면 해당 order return
+                    return order;
+                } 
+                order++;
             }
         }
-        return -1;
+        
+        return 0;
     }
 }
