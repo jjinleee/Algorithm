@@ -2,33 +2,42 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String[] genres, int[] plays) {
-        //장르 횟수 저장
-        Map<String,Integer> genreCount =new HashMap<>();
-        //장르별 노래 인덱스 저장
-        Map<String, List<Integer>> genreSong=new HashMap<>();
-        
-        int i=0;
-        for(String g: genres){
-            genreCount.put(g,genreCount.getOrDefault(g,0)+plays[i]); //장르카운트
-            genreSong.putIfAbsent(g,new ArrayList<>());   //장르별 노래 고유번호저장
-            genreSong.get(g).add(i);
-            i++;
+        List<Integer> answer= new ArrayList<>(); //결과담을배열, 장르에속한 곡이 하나일수도 있으니 길이를 모름-> 리스트 이용
+        Map<Integer,Integer> songPlay=new HashMap<>(); //노래 고유번호,재생횟수
+        Map<String,Integer> genrePlay=new HashMap<>(); //장르별 재생횟수
+        Map<String, List<Integer>> genreSong= new HashMap<>(); //장르별 노래고유번호
+
+        //장르별 재생횟수 카운트 , 노래번호-재생횟수 저장
+        for(int i=0;i<plays.length;i++){
+            genrePlay.put(genres[i],genrePlay.getOrDefault(genres[i],0)+plays[i]);
+            songPlay.put(i,plays[i]);
         }
-        //장르정렬
-        List<String> sortedGenre=new ArrayList<>(genreCount.keySet());
-        sortedGenre.sort((a,b)->genreCount.get(b)-genreCount.get(a)); //내림차순
         
-        List<Integer> result=new ArrayList<>();
-        //많이 재생된 장르부터
-        for(String max : sortedGenre){
-            //해당 장르에 속한 고유번호 리스트
-            List<Integer> tmp=genreSong.get(max);
-            //많이 재생된 순, 같을 시 고유번호 작은순
-            tmp.sort((c,d)-> plays[c]==plays[d] ? c-d : plays[d]-plays[c]);
+        //장르별 노래고유번호 담기
+        for(int j=0;j<genres.length;j++){
+            genreSong.putIfAbsent(genres[j],new ArrayList<>());
+            genreSong.get(genres[j]).add(j);           
+        }
+        
+        //장르별 재생횟수정렬
+        List<String> genreSort=new ArrayList<>();
+        for(String g : genrePlay.keySet()){
+            genreSort.add(g);
+        }
+        genreSort.sort((a,b)-> genrePlay.get(b)-genrePlay.get(a));
+        
+        
+        for(String g : genreSort){
+            //장르내 재생된 노래
+            List<Integer> songs=genreSong.get(g);
+            //많이 재생된 순, 고유번호 낮은 순 정렬
+            songs.sort((a,b)-> songPlay.get(a)==songPlay.get(b) ? a-b : songPlay.get(b)-songPlay.get(a));
             
-            result.add(tmp.get(0));
-            if(tmp.size()>1) result.add(tmp.get(1));
+            answer.add(songs.get(0));
+            if(songs.size()>1) answer.add(songs.get(1)); //리스트사이즈 체크후 넣기
+            
         }
-        return result.stream().mapToInt(Integer::intValue).toArray();
+        
+        return answer.stream().mapToInt(i->i).toArray();
     }
 }
