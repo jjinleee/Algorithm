@@ -1,20 +1,25 @@
 import java.util.*;
 
+//동명이인이 있기때문에 map으로 카운트해야함-> 해시 유형
 class Solution {
     public String solution(String[] participant, String[] completion) {
-        
-        //동명이인있으니까 해시로 카운트->0이 아닌 사람은 완주못한 사람
-        Map<String,Integer> p=new HashMap<>();
-        for(String person : participant){
-            p.put(person, p.getOrDefault(person,0)+1);
+        //이름별 카운트
+        Map<String,Integer> runners=new HashMap<>();
+        for(String people : participant){
+            runners.put(people, runners.getOrDefault(people,0)+1);
         }
+        
+        //완주한 이름-1
         for(String c : completion){
-            p.put(c, p.get(c)-1);
+            int n=runners.get(c);
+            runners.put(c, n-1);
         }
-        
-        for(String name: p.keySet()){
-            if(p.get(name)!=0) return name;
+        //값이 0이 아닌 선수는 완주하지 못한것
+        for(String fail : runners.keySet()){
+            if(runners.get(fail)!=0){
+                return fail;
+            }
         }
-        return "0";
+        return "";
     }
 }
