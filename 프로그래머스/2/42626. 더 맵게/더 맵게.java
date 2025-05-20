@@ -2,20 +2,23 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] scoville, int K) {
-        int answer = 0;
+        //오름차순 자동정렬
         PriorityQueue<Integer> pq=new PriorityQueue<>();
         for(int s : scoville){
-            pq.add(s);
+            pq.offer(s);
         }
         
-        while(pq.peek()<K){
-            int num=pq.poll()+2*pq.poll();
-            pq.add(num);
-            answer++;
+        int time=0;
+        while(true){
+            if(pq.peek()>=K) break;
+            if(pq.peek()<K && pq.size()==1) return -1; //안만들어질경우
             
-            if(pq.size()==1 && pq.peek()<K) return -1;
+            //가장 안매운거 두개 합쳐서 다시 넣기
+            int sc=pq.poll()+2*pq.poll();
+            pq.add(sc);
+            time++;
         }
         
-        return answer;
+        return time;
     }
 }
