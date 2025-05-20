@@ -2,24 +2,22 @@ import java.util.*;
 
 class Solution {
     public int solution(int[][] sizes) {
-        int answer = 0;
-        //가로세로 오름차순 정렬
-        for(int s[]:sizes){
+        //가로,세로 각 명함 별 정렬
+        int[] w=new int[sizes.length];
+        int[] h=new int[sizes.length];
+        
+        int i=0;
+        for(int[] s : sizes){
             Arrays.sort(s);
+            w[i]=s[0];
+            h[i]=s[1];
+            i++;
         }
-        int n=sizes.length;
         
-        int[] width=new int[n];
-        int[] height=new int[n];
-
-        for(int i=0;i<n;i++){
-            width[i]=sizes[i][0];
-            height[i]=sizes[i][1];
-        }
-        Arrays.sort(width);
-        Arrays.sort(height);
+        Arrays.sort(w);
+        Arrays.sort(h);
         
-        
-        return width[n-1]*height[n-1];
+        //각 열에서 가장 큰 것 뽑아서 w*h return
+        return w[sizes.length-1]*h[sizes.length-1];
     }
 }
