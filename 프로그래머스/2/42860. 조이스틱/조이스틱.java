@@ -1,27 +1,25 @@
 class Solution {
     public int solution(String name) {
-        int answer = 0;
-        int n=name.length();
-        for(int i=0;i<n;i++){
-            char c=name.charAt(i);
-            answer+=Math.min(c-'A','Z'-c+1);
+        int answer=0;
+        
+        for(int i=0;i<name.length();i++){
+            //다음 알파벳으로 갈지,이전 알파벳으로 갈지
+            char s= name.charAt(i);
+            answer+=Math.min(s-'A', 91-s);
         }
-        
-        int move=n-1;
-        
-        for(int i=0;i<n;i++){
-            int next=i+1;
-            
-            while(next<n && name.charAt(next)=='A'){
+        int len=name.length();
+        int minMove=len-1;
+        for (int i = 0; i < len; i++) {
+            int next = i + 1;
+            while (next < len && name.charAt(next) == 'A') {
                 next++;
             }
-            
-            move=Math.min(move,i+i+n-next);
-            move = Math.min(move, i + (n - next) * 2);     // 왼쪽 먼저 가는 형태
 
+            // 여기서 핵심!
+            int move = i + len - next + Math.min(i, len - next);
+            minMove=Math.min(minMove, move);
         }
         
-        
-        return answer+move;
+        return answer+minMove;
     }
 }
