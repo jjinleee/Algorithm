@@ -1,47 +1,45 @@
 import java.util.*;
 
-//크루스칼 알고리즘
 class Solution {
     static int[] parent;
     public int solution(int n, int[][] costs) {
+        //자기 자신을 루트노드로 초기화
+        parent=new int[n];
+        for(int i=0;i<n;i++){
+            parent[i]=i;
+        }
         
-        //비용기준 오름차순 정렬
-        Arrays.sort(costs,(a,b)->a[2]-b[2]);
-        parent=new int[n]; 
-        for(int i=0;i<n;i++) parent[i]=i; //자기자신을 부모로 설정
+        //비용순으로 정렬
+        Arrays.sort(costs, (a,b)->a[2]-b[2]);
         
         int totalCost=0;
-        int count=0;
+        int cnt=0;
         
-        for(int[] edge:costs){
+        for(int[] edge: costs){
             int a=edge[0];
             int b=edge[1];
             int cost=edge[2];
             
-            //같은 집합이 아니면 합치고 비용더함. n-1개까지했으면 완료
+            //서로 연결되지 않았다면 연결
             if(find(a)!=find(b)){
                 union(a,b);
                 totalCost+=cost;
-                count++;
-                if(count==n-1) break; 
+                cnt++;
+                if(cnt==n-1) break; //모든 간선 연결했으면 종료
             }
         }
         
-        
         return totalCost;
     }
-    //부모를 찾는 함수
-    int find(int x){
+    static int find(int x){
         if(parent[x]==x) return x;
-        return parent[x]=find(parent[x]);
+        else return parent[x]=find(parent[x]); //이부분 
     }
     
-
-    
-    //같은 집합으로 합치는 함수
-    void union(int a, int b){
-        int roota=find(a);
-        int rootb=find(b);
-        parent[rootb]=roota;
+    static void union(int a, int b){
+        int roota=parent[a];
+        int rootb=parent[b];
+        if(roota<rootb) parent[rootb]=roota;
+        else parent[roota]=rootb;
     }
 }
