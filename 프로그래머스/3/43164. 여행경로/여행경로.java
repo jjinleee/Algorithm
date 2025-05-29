@@ -2,36 +2,38 @@ import java.util.*;
 
 class Solution {
     static List<String> list=new ArrayList<>();
-    static boolean[] visited;
+    static List<String> answer;
+    static boolean finished;
     public String[] solution(String[][] tickets) {
-        visited=new boolean[tickets.length];
+        boolean[] visited=new boolean[tickets.length];
+        
+        //티켓 알파벳순정렬
+        Arrays.sort(tickets, (a,b)-> a[1]==b[1] ? a[0].compareTo(b[0]) : a[1].compareTo(b[1]));
+        
         list.add("ICN");
+        dfs("ICN",tickets, visited);
         
-        //티켓정렬
-        Arrays.sort(tickets, (a,b)->a[0].equals(b[0]) ?  a[1].compareTo(b[1]):  a[0].compareTo(b[0]));
-        
-        dfs(tickets, "ICN", list);
-        return list.toArray(new String[0]);
+        return answer.toArray(new String[0]);
     }
-    static boolean dfs(String[][] tickets,String current, List<String> path){
-        //도달했을시
+    static void dfs(String current, String[][] tickets, boolean[] visited){
         if(list.size()==tickets.length+1){
-            list=new ArrayList<>(path);
-            return true;
+            finished=true;
+            answer=new ArrayList<>(list);
+            return;
         }
         
         for(int i=0;i<tickets.length;i++){
-            if(!visited[i] && tickets[i][0].equals(current)){
+            if(tickets[i][0].equals(current) && !visited[i]){
+                list.add(tickets[i][1]);
                 visited[i]=true;
-                path.add(tickets[i][1]);
-                if(dfs(tickets, tickets[i][1], path)) return true;
+                dfs(tickets[i][1], tickets, visited);
+                
+                //답 찾았으면 바로 종료
+                if(finished) return;
                 //백트래킹
                 visited[i]=false;
-                path.remove(path.size()-1);
+                list.remove(list.size()-1);
             }
         }
-        return false;
-        
-        
     }
 }
