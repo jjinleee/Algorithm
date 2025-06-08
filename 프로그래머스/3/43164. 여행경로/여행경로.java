@@ -1,38 +1,41 @@
 import java.util.*;
 
+
 class Solution {
-    static List<String> list=new ArrayList<>();
+    
     static List<String> answer;
-    static boolean finished;
     public String[] solution(String[][] tickets) {
-        boolean[] visited=new boolean[tickets.length];
+        Arrays.sort(tickets, (a,b)-> a[0].compareTo(b[0])==0 ? a[1].compareTo(b[1]): a[0].compareTo(b[0]));
         
-        //티켓 알파벳순정렬
-        Arrays.sort(tickets, (a,b)-> a[1]==b[1] ? a[0].compareTo(b[0]) : a[1].compareTo(b[1]));
+        boolean[] visited= new boolean[tickets.length];
+
+        List<String> w=new ArrayList<>();
+        w.add("ICN");
+        answer=null;
+        dfs("ICN",tickets, visited,w);
         
-        list.add("ICN");
-        dfs("ICN",tickets, visited);
         
         return answer.toArray(new String[0]);
     }
-    static void dfs(String current, String[][] tickets, boolean[] visited){
-        if(list.size()==tickets.length+1){
-            finished=true;
-            answer=new ArrayList<>(list);
+    static void dfs(String current, String[][] tickets, boolean[] visited, List<String> way){
+        if(way.size()==tickets.length+1){
+            answer=new ArrayList<>(way);
             return;
         }
-        
         for(int i=0;i<tickets.length;i++){
-            if(tickets[i][0].equals(current) && !visited[i]){
-                list.add(tickets[i][1]);
-                visited[i]=true;
-                dfs(tickets[i][1], tickets, visited);
+            if(!visited[i] && current.equals(tickets[i][0])){
+                if(answer==null){
+                    
                 
-                //답 찾았으면 바로 종료
-                if(finished) return;
+                way.add(tickets[i][1]);
+                current=tickets[i][1];
+                visited[i]=true;
+                dfs(current,tickets, visited, way);
                 //백트래킹
+                current=tickets[i][0];
                 visited[i]=false;
-                list.remove(list.size()-1);
+                way.remove(way.size()-1);
+            }
             }
         }
     }
