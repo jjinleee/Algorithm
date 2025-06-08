@@ -1,18 +1,26 @@
 import java.util.*;
 
 class Solution {
+    static int[] dx={-1,1,0,0};
+    static int[] dy={0,0,-1,1};
+    static int n,m;
+    static boolean[][] visited;
+    static Queue<int[]> queue=new LinkedList<>();
+    
     public int solution(int[][] maps) {
-        int[] dx={-1,1,0,0};
-        int[] dy={0,0,-1,1};
-        int n=maps.length;
-        int m=maps[0].length;
+        n=maps.length;
+        m=maps[0].length;
         
-        boolean[][] visited= new boolean[n][m];
-        
-        Queue<int[]> queue=new LinkedList<>();
-        queue.add(new int[]{0,0});
+        visited=new boolean[n][m];
+        queue.offer(new int[]{0,0});
         visited[0][0]=true;
         
+        bfs(maps);
+        
+        return maps[n-1][m-1]==1 ? -1 : maps[n-1][m-1];
+    }
+    
+    static void bfs(int[][] maps){ 
         while(!queue.isEmpty()){
             int[] current=queue.poll();
             int x=current[0];
@@ -22,17 +30,14 @@ class Solution {
                 int nx=x+dx[i];
                 int ny=y+dy[i];
                 
-                // 범위체크
-                if(nx>=0 && nx<n && ny>=0 && ny<m){
-                    //벽이 아니고 방문안했다면
-                    if(maps[nx][ny]==1 && !visited[nx][ny]){
-                        queue.add(new int[]{nx,ny});
-                        maps[nx][ny]=maps[x][y]+1; //개수누적
+                if( nx>=0 && nx<n && ny>=0 && ny<m){
+                    if(!visited[nx][ny] && maps[nx][ny]==1){
                         visited[nx][ny]=true;
+                        maps[nx][ny]=maps[x][y]+1;
+                        queue.offer(new int[]{nx,ny});
                     }
                 }
             }
         }
-        return maps[n-1][m-1]==1 ? -1 : maps[n-1][m-1];
     }
 }
