@@ -11,11 +11,11 @@ class Solution {
         if(nums[0].equals("0")) return "0";
         
         StringBuilder sb= new StringBuilder();
-        for(String n : nums){
+        for(String n :nums){
             sb.append(n);
         }
         
-        return sb.toString();
+        return  sb.toString();
         
     }
 }
