@@ -2,32 +2,31 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
-        //남은작업일(올림사용)
-        int[] left=new int[progresses.length];
-        for(int i=0;i<speeds.length;i++){
-            left[i]=(int)Math.ceil((100.0-progresses[i])/speeds[i]);
+        Queue<Integer> queue=new LinkedList<>();
+        List<Integer> list=new ArrayList<>(); 
+        
+        
+        //남은일수저장
+        int[] day=new int[progresses.length];
+        for(int i=0;i<progresses.length;i++){
+            day[i]=(int)Math.ceil((100.0-progresses[i])/speeds[i]);
         }
         
-        List<Integer> answer=new ArrayList<>();
-        Queue<Integer> queue=new LinkedList<>();
-
-        for(int l : left){
-            if(queue.isEmpty()) queue.offer(l);
+        for(int d : day){
+            if(queue.isEmpty()) queue.offer(d);
             else{
-                if(queue.peek()<l){ //먼저완성시 나감
-                    answer.add(queue.size());
+                //먼저 끝나면 먼저 나감
+                if(queue.peek()<d){
+                    list.add(queue.size());
                     queue.clear();
-                    queue.offer(l);
-                } else { //뒤에거가 더 일찍끝나면 같이 나감
-                    queue.offer(l); 
+                    queue.offer(d);
+                } else{ //기다림
+                    queue.offer(d);
                 }
             }
         }
-        answer.add(queue.size());
+        list.add(queue.size());
         
-        //마지막것도 넣어줘야함
-        
-        
-        return answer.stream().mapToInt(i->i).toArray();
+        return list.stream().mapToInt(i->i).toArray();
     }
 }
