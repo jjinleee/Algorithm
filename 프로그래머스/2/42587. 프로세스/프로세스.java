@@ -8,18 +8,16 @@ class Solution {
         }
         
         int order=1;
+        
         while(!queue.isEmpty()){
-            int[] current=queue.poll();
+            int[] next=queue.poll();
             
-            // 뒤에 더 높은 우선순위가 있는지 확인 stream, anyMatch 사용
-            boolean hasHigher = queue.stream().anyMatch(p -> p[1] > current[1]);
-            
+            boolean hasHigher= queue.stream().anyMatch(p->p[1]>next[1]);
             if(hasHigher){
-                queue.offer(current); //맨뒤로보냄
-            } else{
-                if(current[0]==location){ //location 차례가 오면 해당 order return
-                    return order;
-                } 
+                queue.offer(next);
+            }
+            else{
+                if(next[0]==location) return order;
                 order++;
             }
         }
