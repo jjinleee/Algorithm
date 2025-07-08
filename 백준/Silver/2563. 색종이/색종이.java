@@ -1,32 +1,33 @@
 import java.io.*;
 import java.util.*;
 
-
-public class Main{
+class Main {
     public static void main(String[] args) throws IOException {
-       Scanner sc=new Scanner(System.in);
-       int answer=0;
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+        int n=Integer.parseInt(br.readLine());
+        
+        boolean[][] square=new boolean[101][101];
 
-       int n=sc.nextInt();
-        boolean area[][]=new boolean[100][100];
-
-       for(int i=0;i<n;i++){
-            int x=sc.nextInt();
-            int y=sc.nextInt();
-            for(int j=x;j<x+10;j++){
-                for(int k=y;k<y+10;k++){
-                    area[j][k]=true;
+        for(int i=0;i<n;i++){
+            StringTokenizer st= new StringTokenizer(br.readLine());
+            int w=Integer.parseInt(st.nextToken());
+            int h=Integer.parseInt(st.nextToken());
+            
+            for(int x=w ;x<w+10 ;x++){
+                for(int y=h;y<h+10;y++){
+                    square[x][y]=true;
                 }
             }
-       }
+        }
 
-       for(int i=0;i<100;i++){
-            for(int j=0;j<100;j++){
-                if(area[i][j]==true)
-                 answer++;
+        int cnt=0;
+        for(int i=0;i<101;i++){
+            for(int j=0;j<101;j++){
+                if(square[i][j]==true) cnt++;
             }
-       }
-       System.out.println(answer);
+        }
+
+        System.out.println(cnt);
 
     }
 }
