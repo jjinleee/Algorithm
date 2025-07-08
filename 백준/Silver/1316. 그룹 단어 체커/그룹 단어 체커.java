@@ -1,28 +1,33 @@
 import java.io.*;
 import java.util.*;
 
-public class Main{
+class Main {
     public static void main(String[] args) throws IOException {
-        Scanner sc=new Scanner(System.in);
-        int n=sc.nextInt();
-        int count=n;
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+        int n=Integer.parseInt(br.readLine());
 
+        int cnt=0;
         for(int i=0;i<n;i++){
-            String s=sc.next();
-            //boolean 배열 초기값=false
-            boolean alpa[]=new boolean[26];
+            String s=br.readLine();
+            if(isGroup(s)) cnt++;
+        }
+        System.out.println(cnt);
+        
+    }
+    static boolean isGroup(String word){
+        char prev=word.charAt(0);
+        boolean[] alpa=new boolean[26];
+        alpa[prev-'a']=true;
 
-            for(int j=0;j<s.length()-1;j++){
-                if(s.charAt(j)!=s.charAt(j+1)){
-                    if(alpa[s.charAt(j+1)-97]==true){
-                        count--;
-                        break;
-                    }
-                }
-                alpa[s.charAt(j)-97]=true;
+        for(int i=1;i<word.length();i++){
+            char c= word.charAt(i);
+            if(c!=prev){
+                if(alpa[c-'a']==true) return false;
             }
+            alpa[c-'a']=true;
+            prev=c;
         }
 
-        System.out.println(count);
+        return true;
     }
 }
