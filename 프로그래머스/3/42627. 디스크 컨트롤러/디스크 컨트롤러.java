@@ -2,35 +2,34 @@ import java.util.*;
 
 class Solution {
     public int solution(int[][] jobs) {
-        //요청시각 빠른 순으로 정렬
-        Arrays.sort(jobs, (a,b)->a[0]-b[0]);
-        
-        //소요시간 순으로 정렬
+        Arrays.sort(jobs,(a,b)->a[0]-b[0]);//요청시각 순
+        //소요시간 순, 요청시각순
         PriorityQueue<int[]> pq=new PriorityQueue<>((a,b)->a[1]-b[1]);
+    
         
+        int idx=0; //아직큐에넣지않은 인덱스
         int time=0;
         int total=0;
-        int i=0; //현재 큐에들어가는것
-        int count=0; //실행완료된것
-        int n=jobs.length;
+        int cnt=0; //작업처리한 개수
         
-        while(count<n){    
-            //현재 시간이하의 요청작업을 큐에 삽입
-            while(i<n && jobs[i][0]<=time){
-                pq.offer(jobs[i++]);
+        
+        while(cnt<jobs.length){
+            //현재 시간이하로 요쳥된 모든 작업 넣기
+            while(idx<jobs.length && jobs[idx][0]<=time){
+                pq.add(jobs[idx]);
+                idx++;
             }
-            //실행완료된건 뺴고 반환시각계산, 반환시간=끝난시간-요청시각
-            //실행완료된지 알려면 지금시간-실행시작시간>=소요시간 체크?
-            if(!pq.isEmpty()) {
-                int[] job=pq.poll();
-                time+=job[1]; //작업수행시간
-                total+=time-job[0]; //대기+수행시간c
-                count++;
-            } else {
-                //대기할 작업 없을시 시간만흐름
-                time=jobs[i][0];
+            if(!pq.isEmpty()){
+                int[] job=pq.poll(); //가장짧은 작업
+                time+=job[1];        //현재시간+=작업시간
+                total+=(time-job[0]); //완료시간-요청시간
+                cnt++;
+            } else{
+                //처리할 작업없을때 다음 요청 시간으로 점프
+                time=jobs[idx][0];
             }
         }
-        return total/n;
+    
+        return total/jobs.length;
     }
 }
