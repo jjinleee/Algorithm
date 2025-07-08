@@ -2,23 +2,21 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String[] operations) {
-        PriorityQueue<Integer> pq=new PriorityQueue<>();
-        PriorityQueue<Integer> pq2=new PriorityQueue<>(Collections.reverseOrder());
-        
-        for(String o : operations){
-            String[] op=o.split(" ");
-            
-            if(op[0].equals("I")){
-                pq.offer(Integer.parseInt(op[1]));
-                pq2.offer(Integer.parseInt(op[1]));
+        PriorityQueue<Integer> min=new PriorityQueue<>();
+        PriorityQueue<Integer> max=new PriorityQueue<>(Collections.reverseOrder());
+        for(String o:operations){
+            String[] command=o.split(" ");
+            if(command[0].equals("I")){
+                min.add(Integer.parseInt(command[1]));
+                max.add(Integer.parseInt(command[1]));
             }
-            else if(!pq.isEmpty() ){
-                if(op[1].equals("-1")){
-                    pq2.remove(pq.poll());
-                } else pq.remove(pq2.poll());
-            }            
+            else if(command[1].equals("1")){ //최댓값삭제
+                min.remove(max.poll());
+            } else { //최솟값삭제
+                max.remove(min.poll());
+            }
         }
         
-        return pq.isEmpty() ? new int[]{0,0} : new int[]{pq2.peek(),pq.peek()};
+        return min.isEmpty() ? new int[]{0,0} : new int[]{max.peek(),min.peek()};
     }
 }
