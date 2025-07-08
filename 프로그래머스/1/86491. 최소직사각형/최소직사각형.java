@@ -2,22 +2,21 @@ import java.util.*;
 
 class Solution {
     public int solution(int[][] sizes) {
-        //가로,세로 각 명함 별 정렬
-        int[] w=new int[sizes.length];
-        int[] h=new int[sizes.length];
+        int maxWidth=0;
+        int maxHeight=0;
         
-        int i=0;
+        //더 긴걸 세로로 놓기
         for(int[] s : sizes){
-            Arrays.sort(s);
-            w[i]=s[0];
-            h[i]=s[1];
-            i++;
+            if(s[0]<=s[1]){
+                if(s[0]>maxWidth) maxWidth=s[0];
+                if(s[1]>maxHeight) maxHeight=s[1];
+            } else {
+                if(s[1]>maxWidth) maxWidth=s[1];
+                if(s[0]>maxHeight) maxHeight=s[0];
+            }
         }
         
-        Arrays.sort(w);
-        Arrays.sort(h);
         
-        //각 열에서 가장 큰 것 뽑아서 w*h return
-        return w[sizes.length-1]*h[sizes.length-1];
+        return maxHeight*maxWidth;
     }
 }
