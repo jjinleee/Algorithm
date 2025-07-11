@@ -1,66 +1,70 @@
 import java.io.*;
 import java.util.*;
 
-
-public class Main { 
-    static int cnt=0;
+public class Main {
+    static int[][] home;
     static boolean[][] visited;
-    static int[][] map;
+    static int cnt=0;
+    static List<Integer> list=new ArrayList<>();
+    static int[] dx={-1,1,0,0};
+    static int[] dy={0,0,-1,1};
     static int n;
-    static List<Integer> homes;
-    static int[] dx = {0, 0, -1, 1}; 
-    static int[] dy = {-1, 1, 0, 0};
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        
-        n=Integer.parseInt(br.readLine());
-        map= new int[n][n];
-        visited= new boolean[n][n];
-        homes=new ArrayList<>();
 
+    public static void main(String[] args) throws IOException {
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+        n=Integer.parseInt(br.readLine());
+
+        home=new int[n][n];
+        
+        
         for(int i=0;i<n;i++){
             String s=br.readLine();
             for(int j=0;j<n;j++){
-                map[i][j]=s.charAt(j)-'0';
+                home[i][j]=s.charAt(j)-'0';
             }
         }
 
-        int count=0;
+        visited=new boolean[n][n];
         for(int i=0;i<n;i++){
             for(int j=0;j<n;j++){
-                if(!visited[i][j] && map[i][j]==1){
-                    homes.add(dfs(i,j));
-                    count++;
+                if(!visited[i][j] && home[i][j]==1){
+                    bfs(i,j);
+                    cnt++;
                 }
             }
         }
 
-        //단지수
-        System.out.println(count);
-        //단지에 속하는 집의 수 오름차순
-        Collections.sort(homes);
-        for(int h:homes){
-            System.out.println(h);
+        System.out.println(cnt); 
+        Collections.sort(list);
+        for(int l : list){
+            System.out.println(l);
         }
+    }    
+    
+    static void bfs(int x, int y){
+        int c=1;
+       Queue<int[]> q=new LinkedList<>();
+       q.offer(new int[]{x,y});
+       visited[x][y]=true;
 
+       while(!q.isEmpty()){
+            int[] curr=q.poll();
 
-    }
-    // DFS로 연결된 집 수 세기
-    static int dfs(int x, int y) {
-        visited[x][y] = true;
-        int count = 1;
+            for(int i=0;i<4;i++){
+                int nx=curr[0]+dx[i];
+                int ny=curr[1]+dy[i];
 
-        for (int d = 0; d < 4; d++) {
-            int nx = x + dx[d];
-            int ny = y + dy[d];
-
-            if (nx >= 0 && ny >= 0 && nx < n && ny < n) {
-                if (map[nx][ny] == 1 && !visited[nx][ny]) {
-                    count += dfs(nx, ny);
+                if(nx>=0 && ny>=0 && nx<n && ny<n){
+                    if(!visited[nx][ny] && home[nx][ny]==1){
+                        c++;
+                        q.offer(new int[]{nx,ny});
+                        visited[nx][ny]=true;
+                    }                   
                 }
-            }
-        }
 
-        return count;
+            }
+       }
+       list.add(c);
+
     }
 }
