@@ -1,52 +1,62 @@
 import java.io.*;
 import java.util.*;
 
-
-public class Main { 
-    static boolean[] visited;
+public class Main {
     static int n,m;
-    static int[] node;
-    static ArrayList<Integer>[] graph;
+    static boolean[] visited;
+    static List<List<Integer>> graph=new ArrayList<>();
+
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st=new StringTokenizer(br.readLine());
+        BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st= new StringTokenizer(br.readLine());
+
+        int cnt=0;
 
         n=Integer.parseInt(st.nextToken());
         m=Integer.parseInt(st.nextToken());
 
-        visited= new boolean[n+1];
-        node=new int[n+1];
-        graph=new ArrayList[n+1];
-        for(int i=1;i<=n;i++){
-            graph[i]=new ArrayList<>();
+        visited=new boolean[n+1];
+
+        for(int i=0;i<=n;i++){
+            graph.add(new ArrayList<>());
         }
 
         for(int i=0;i<m;i++){
             st=new StringTokenizer(br.readLine());
-            int u=Integer.parseInt(st.nextToken());
-            int v=Integer.parseInt(st.nextToken());
-
-            graph[u].add(v);
-            graph[v].add(u);
+            int a=Integer.parseInt(st.nextToken());
+            int b=Integer.parseInt(st.nextToken());
+            
+            //양방향 연결
+            graph.get(a).add(b);
+            graph.get(b).add(a);
         }
 
-        //덩어리개수 세면됨
-        int count=0;
+
         for(int i=1;i<=n;i++){
             if(!visited[i]){
-                dfs(i);
-                count++;
+                bfs(i);
+                cnt++;
             }
         }
-        System.out.println(count);
-    }
-    static void dfs(int n){
-        visited[n]=true;
 
-        for(int node:graph[n]){
-            if(!visited[node]){
-                dfs(node);
+        System.out.println(cnt);
+    }
+    static void bfs(int node){
+        Queue<Integer> q= new LinkedList<>();
+        
+        q.offer(node);
+        visited[node]=true;
+
+        while(!q.isEmpty()){
+            int next=q.poll();
+            for(int n : graph.get(next)){
+                if(!visited[n]){
+                    q.offer(n);
+                    visited[n]=true;
+                }
             }
+
         }
+        
     }
 }
