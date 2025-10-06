@@ -1,18 +1,19 @@
 import java.util.*;
 
-//괄호문제는 거의 스택 유형
 class Solution {
     boolean solution(String s) {
-        Stack<Character> stack=new Stack<>();
-        for(int i=0;i<s.length();i++){
-            if(s.charAt(i)=='('){
-                stack.push('(');
-            } else if(!stack.isEmpty() && s.charAt(i)==')'){
-                stack.pop();
-            } else return false;
+        Stack<Character> q=new Stack<>();
+        for(char c : s.toCharArray()){
+            if(q.isEmpty()) q.push(c);
+            else{
+                if(c=='(') q.push(c);
+                else{
+                    if(q.isEmpty()) return false;
+                    q.pop();
+                }
+            }
         }
         
-        if(stack.isEmpty()) return true;
-        else return false;
+        return q.isEmpty() ? true: false;
     }
 }
