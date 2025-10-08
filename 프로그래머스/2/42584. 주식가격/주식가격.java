@@ -2,20 +2,18 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] prices) {
-        int[] answer=new int[prices.length];
+        int[] result=new int[prices.length];
         
-        for(int i=0;i<prices.length-1;i++){
-            int cnt=0;
+        for(int i=0;i< prices.length-1;i++){
+            int time=0;
             for(int j=i+1;j<prices.length;j++){
-                cnt++;
+                time++;
                 if(prices[i]>prices[j]){
-                    answer[i]=cnt;
                     break;
-                }
+                } 
             }
-            answer[i]=cnt;
+            result[i]=time;
         }
-        
-        return answer;
+        return result;
     }
 }
