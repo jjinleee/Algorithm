@@ -2,26 +2,33 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] priorities, int location) {
-        Queue<int[]> queue=new LinkedList<>();
+        Queue<int[]> q=new LinkedList<>();
+        int[] freq=new int[10];
         for(int i=0;i<priorities.length;i++){
-            queue.offer(new int[]{i,priorities[i]});
+            q.offer(new int[]{i,priorities[i]});
+            freq[priorities[i]]++;
         }
+        int cnt = 0;
+        int max= 9;
         
-        int order=1;
+        while(max>0 && freq[max]==0) max--;
         
-        while(!queue.isEmpty()){
-            int[] next=queue.poll();
+        
+    while(!q.isEmpty()){
+        int[] cur=q.peek();
+        int p=cur[1];
+        
+        if(p<max){
+            q.offer(q.poll());
+        } else{
+            q.poll();
+            cnt++;
+            freq[p]--;
             
-            boolean hasHigher= queue.stream().anyMatch(p->p[1]>next[1]);
-            if(hasHigher){
-                queue.offer(next);
-            }
-            else{
-                if(next[0]==location) return order;
-                order++;
-            }
+            if(cur[0]==location) return cnt;
+            while(max>0 && freq[max]==0) max--;
         }
-        
-        return 0;
+    }
+        return cnt;
     }
 }
