@@ -1,23 +1,23 @@
 import java.util.*;
 
 class Solution {
+    static char[] dict={'A','E','I','O','U'};
     static List<String> list=new ArrayList<>();
-    static char[] c={'A','E','I','O','U'};
+    static int cnt=0;
     public int solution(String word) {
-        dfs("",0);
+        
+        find("",0);
         for(int i=0;i<list.size();i++){
-            if(word.equals(list.get(i))){
-                return i;
-            }
+            if(list.get(i).equals(word)) return i;
         }
         return 0;
     }
-    static void dfs(String str,int dept ){
-        list.add(str);
-        if(dept==5) return;
-        for(int i=0;i<5;i++){
-            dfs(str+c[i], dept+1);
-        }
+    static void find( String cur, int depth){
+        list.add(cur);
+        if(depth==5) return;
         
+        for(int i=0;i<5;i++){
+            find( cur+dict[i], depth+1);
+        }
     }
 }
