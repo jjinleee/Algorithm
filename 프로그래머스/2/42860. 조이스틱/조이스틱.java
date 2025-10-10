@@ -1,25 +1,34 @@
 class Solution {
     public int solution(String name) {
-        int answer=0;
+        int answer = 0;
+        int n=name.length();
         
-        for(int i=0;i<name.length();i++){
-            //다음 알파벳으로 갈지,이전 알파벳으로 갈지
-            char s= name.charAt(i);
-            answer+=Math.min(s-'A', 91-s);
-        }
-        int len=name.length();
-        int minMove=len-1;
-        for (int i = 0; i < len; i++) {
-            int next = i + 1;
-            while (next < len && name.charAt(next) == 'A') {
-                next++;
-            }
-
-            // 여기서 핵심!
-            int move = i + len - next + Math.min(i, len - next);
-            minMove=Math.min(minMove, move);
+        //세로이동
+        for(int i=0;i<n;i++){
+            char s=name.charAt(i);
+            answer+=Math.min(s-65, 91-s);
         }
         
-        return answer+minMove;
+        
+        
+        //가로이동
+        int min=n-1; //커서 순차이동
+        //두가지 경우 중 최소
+        for(int i=0;i<n;i++){
+            int next=i+1;
+            while(next<n && name.charAt(next)=='A') next++;
+            
+            //순차적 i까지 왔다가 되돌아서 뒤쪽 
+            // i까지 감 + 되돌아 옴 + 뒤쪽 남은칸 =2 * i + n-next
+            int rightThenLeft=2*i+n-next;
+            
+            //끝까지 갔다가 되돌아옴
+            //n까지 갔다가 n-next만큼 되돌아옴 = i+ 2* (n-next)
+            int leftThenRight=i+2*(n-next);
+            
+            min=Math.min(min, Math.min(rightThenLeft, leftThenRight));
+            
+        }
+        return answer+min;
     }
 }
