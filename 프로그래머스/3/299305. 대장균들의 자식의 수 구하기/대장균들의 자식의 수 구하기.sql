@@ -1,6 +1,6 @@
 -- 코드를 작성해주세요
-SELECT P.ID ,COUNT(C.ID) AS CHILD_COUNT
-FROM ECOLI_DATA C
-RIGHT JOIN ECOLI_DATA P ON C.PARENT_ID=P.ID
-GROUP BY P.ID
-ORDER BY P.ID;
+-- 코드를 작성해주세요
+select p.id, coalesce(count(c.id),0) as child_count
+from ecoli_data p left join ecoli_data c on p.id=c.parent_id
+group by p.id
+order by p.id 
