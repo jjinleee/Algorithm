@@ -1,9 +1,10 @@
-SELECT ID, EMAIL, FIRST_NAME, LAST_NAME
-FROM DEVELOPERS
-WHERE (SKILL_CODE & (
-    SELECT SUM(CODE)
-    FROM SKILLCODES
-    WHERE NAME IN ('Python','C#')
-)) >0
-ORDER BY ID;
-
+-- 코드를 작성해주세요
+select d.id, d.email, d.first_name, d.last_name
+from developers d
+join (
+select sum(code) as mask
+from skillcodes
+where name in ('Python','C#')
+) r
+where  ( d.skill_code & r.mask) >0
+order by d.id
