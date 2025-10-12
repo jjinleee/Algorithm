@@ -1,10 +1,10 @@
 -- 코드를 작성해주세요
-SELECT I.ID , N.FISH_NAME, I.LENGTH
-FROM FISH_INFO I
-JOIN FISH_NAME_INFO N ON I.FISH_TYPE=N.FISH_TYPE
-JOIN(
-    SELECT FISH_TYPE, MAX(LENGTH) AS MAX_LENGTH
-    FROM FISH_INFO
-    GROUP BY FISH_TYPE
-) M ON I.FISH_TYPE=M.FISH_TYPE AND I.LENGTH=M.MAX_LENGTH
-ORDER BY I.ID;
+select i.id, n.fish_name, i.length
+from fish_info i
+join fish_name_info n on i.fish_type=n.fish_type
+join (
+    select fish_type, max(length)as max
+    from fish_info
+    group by fish_type
+) m on i.length=m.max and i.fish_type=m.fish_type
+order by id
