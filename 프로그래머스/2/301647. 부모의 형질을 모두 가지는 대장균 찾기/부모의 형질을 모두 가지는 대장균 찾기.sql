@@ -1,6 +1,5 @@
 -- 코드를 작성해주세요
-SELECT C.ID, C.GENOTYPE, P.GENOTYPE AS PARENT_GENOTYPE 
-FROM ECOLI_DATA C
-JOIN ECOLI_DATA P ON C.PARENT_ID=P.ID
-WHERE C.GENOTYPE & P.GENOTYPE= P.GENOTYPE
-ORDER BY C.ID;
+select c.id, c.genotype, p.genotype as parent_genotype
+from ecoli_data p join ecoli_data c on p.id=c.parent_id
+where p.genotype & c.genotype >= p.genotype
+order by c.id
