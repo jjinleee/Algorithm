@@ -1,19 +1,17 @@
 -- 코드를 작성해주세요
-WITH RECURSIVE GENERATION_CTE AS(
-    SELECT ID, 1 AS GENERATION
-    FROM ECOLI_DATA
-    WHERE PARENT_ID IS NULL
-    UNION ALL
-    SELECT e.ID, gc.GENERATION+1
-    FROM ECOLI_DATA e
-    JOIN GENERATION_CTE gc ON e.PARENT_ID=gc.ID
+with recursive generation as (
+    select id, parent_id, 1 as gen
+    from ecoli_data
+    where parent_id is null
+    
+    union all
+    
+    select e.id, e.parent_id, g.gen+1
+    from ecoli_data e join generation g on e.parent_id=g.id 
 )
-SELECT COUNT(*) AS COUNT, GENERATION                    
-FROM GENERATION_CTE
-WHERE ID NOT IN (
-    SELECT DISTINCT PARENT_ID
-    FROM ECOLI_DATA
-    WHERE PARENT_ID IS NOT NULL
-)
-GROUP BY GENERATION
-ORDER BY GENERATION;
+select count(*) as count, g.gen as generation
+from generation g left join ecoli_data e
+on g.id=e.parent_id
+where e.id is null
+group by g.gen
+order by generation
