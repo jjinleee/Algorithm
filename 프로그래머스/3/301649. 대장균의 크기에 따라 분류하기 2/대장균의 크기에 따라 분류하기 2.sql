@@ -1,13 +1,9 @@
--- 코드를 작성해주세요
-with ranked as(
-select id, size_of_colony, percent_rank() over (order by size_of_colony desc) as pct
-from ecoli_data
-)
-select id, 
-case when pct<=0.25 then 'CRITICAL'
-     when pct<=0.50 then 'HIGH'
-     when pct<=0.75 then 'MEDIUM'
-     else 'LOW'
-    end as colony_name
-    from ranked
-    order by id
+SELECT ID,
+       CASE NTILE(4) OVER (ORDER BY SIZE_OF_COLONY DESC)
+            WHEN 1 THEN 'CRITICAL'
+            WHEN 2 THEN 'HIGH'
+            WHEN 3 THEN 'MEDIUM'
+            ELSE 'LOW'
+       END AS COLONY_NAME
+FROM ECOLI_DATA
+ORDER BY ID;
