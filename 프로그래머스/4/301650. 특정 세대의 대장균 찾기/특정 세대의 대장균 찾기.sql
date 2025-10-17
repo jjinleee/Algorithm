@@ -1,16 +1,13 @@
 -- 코드를 작성해주세요
-with recursive generations as(
-    select id, parent_id, 1 as gen
-    from ecoli_data
-    where parent_id is null
-    
-    union all
-    
-    select e.id, e.parent_id, g.gen+1
-    from ecoli_data e
-    join generations g on e.parent_id=g.id
+WITH RECURSIVE TREE AS(
+    SELECT ID,1 AS GEN
+    FROM ECOLI_DATA
+    WHERE PARENT_ID IS NULL
+    UNION ALL
+    SELECT E.ID, T.GEN+1 AS GEN
+    FROM ECOLI_DATA E JOIN TREE T ON E.PARENT_ID=T.ID
 )
-select id
-from generations
-where gen=3
-order by id
+SELECT ID
+FROM TREE
+WHERE GEN=3
+ORDER BY ID
