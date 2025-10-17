@@ -1,42 +1,44 @@
 import java.util.*;
 
 class Solution {
-    static int answer=Integer.MAX_VALUE;
+    static class Word{
+        String word;
+        int cnt;
+        
+        Word(String word, int cnt){
+            this.word=word;
+            this.cnt=cnt;
+        }
+    }
     public int solution(String begin, String target, String[] words) {
-        //변환못하면 return 0
-        if(!Arrays.asList(words).contains(target)) return 0;
-        boolean[] visited=new boolean[words.length];
+        int answer = 0;
+        Queue<Word> q=new LinkedList<>();
+        boolean[] visited= new boolean[words.length];
         
-        
-        for(int i=0;i<words.length;i++){
-            if(!visited[i]){
-                dfs(visited, begin,target, words,0);
+        q.offer(new Word(begin,0));
+        while(!q.isEmpty()){
+            Word c=q.poll();
+            
+            if(c.word.equals(target)) return c.cnt;
+            
+            for(int i=0;i<words.length;i++){
+                if(isDiff(c.word,words[i]) && !visited[i]){
+                    q.offer(new Word(words[i],c.cnt+1));
+                    visited[i]=true;
+                }
             }
         }
-        
-        return answer;
+        return 0;
     }
-    
-    static void dfs(boolean[] visited, String current,String target, String[] words, int cnt){
-        if(current.equals(target)){
-            answer=Math.min(answer,cnt);
-            return;
-        }
-        
-        for(int i=0;i<words.length;i++){
-            if(!visited[i] && isDifferent(current, words[i])){
-                visited[i]=true;
-                dfs(visited, words[i],target, words, cnt+1 );
-                visited[i]=false;
-            }
-        } 
-    }
-    //한글자만 다른지 체크
-    static boolean isDifferent(String a, String b){
+                            
+    static boolean isDiff(String a, String b){
         int cnt=0;
-        for(int i=0;i<a.length();i++){
+        
+        for(int i=0;i<b.length();i++){
             if(a.charAt(i)!=b.charAt(i)) cnt++;
         }
+        
         return cnt==1 ? true : false;
     }
+                  
 }
