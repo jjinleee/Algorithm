@@ -2,9 +2,8 @@ import java.util.*;
 
 class Solution {
     public int solution(int n, int[][] wires) {
-        int answer=n;
-        boolean[] visited=new boolean[n+1];
-        
+        int answer = n;
+        boolean[] visited;
         for(int i=0;i<wires.length;i++){
             List<List<Integer>> graph=new ArrayList<>();
             for(int j=0;j<=n;j++){
@@ -15,36 +14,37 @@ class Solution {
                 if(i==j) continue;
                 int a=wires[j][0];
                 int b=wires[j][1];
+                
                 graph.get(a).add(b);
                 graph.get(b).add(a);
             }
             visited=new boolean[n+1];
-            int cnt=bfs(1, visited, graph);
+            int cnt=bfs(1,visited,graph);
             int diff=Math.abs(n-2*cnt);
-            answer=Math.min(answer, diff);
+            answer=Math.min(diff, answer);
         }
-        
         return answer;
     }
-    
     static int bfs(int start, boolean[] visited, List<List<Integer>> graph){
-        int count=1;
+        int cnt=1;
         
-        Queue<Integer> q= new LinkedList<>();
-        q.offer(start);
         visited[start]=true;
+        Queue<Integer> q=new LinkedList<>();
+        
+        q.offer(start);
         
         while(!q.isEmpty()){
-            int curr=q.poll();
-            for(int n : graph.get(curr)){
-                if(!visited[n]){
-                    q.offer(n);
-                    visited[n]=true;
-                    count++;
+            int cur=q.poll();
+                for(int next: graph.get(cur)){
+                    if(!visited[next]){
+                        q.offer(next);
+                        visited[next]=true;
+                        cnt++;
+                    }
                 }
             }
-        }
+        return cnt;
         
-        return count;
+
     }
 }
