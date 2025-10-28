@@ -3,21 +3,22 @@ import java.util.*;
 class Solution {
     static char[] dict={'A','E','I','O','U'};
     static List<String> list=new ArrayList<>();
-    static int cnt=0;
     public int solution(String word) {
         
         find("",0);
         for(int i=0;i<list.size();i++){
-            if(list.get(i).equals(word)) return i;
+            if(word.equals(list.get(i))){
+                return i;
+            }
         }
         return 0;
     }
-    static void find( String cur, int depth){
-        list.add(cur);
+    static void find(String current, int depth){
+        list.add(current);
         if(depth==5) return;
         
-        for(int i=0;i<5;i++){
-            find( cur+dict[i], depth+1);
+        for(int i=0;i<dict.length;i++){
+            find(current+dict[i], depth+1);
         }
     }
 }
