@@ -11,30 +11,23 @@ public class Main {
 
         st=new StringTokenizer(br.readLine());
         //배열보다 리스트가 효율적 (값 변경이 잦음)
-        //int[] a=new int[n];
-        List<Long> list=new ArrayList<>();
+        PriorityQueue<Long> pq=new PriorityQueue<>();
         for(int i=0;i<n;i++){
-            list.add(Long.parseLong(st.nextToken()));
+            pq.offer(Long.parseLong(st.nextToken()));
         }   
         
-        Collections.sort(list);
         int cnt=0;
         while(cnt<m){
-            if(list.size()<2) break;
-            long sum=list.get(0)+list.get(1);
-            
+            long sum=pq.poll()+pq.poll();
 
-            list.remove(0);
-            list.remove(0);
-            list.add(sum);
-            list.add(sum);
+            pq.offer(sum);
+            pq.offer(sum);
 
-            Collections.sort(list);
             cnt++;
         }
 
         long total=0;
-        for(long i : list){
+        for(long i : pq){
             total+=i;
         }
 
