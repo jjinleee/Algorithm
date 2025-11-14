@@ -2,32 +2,28 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
-        List<Integer> result=new ArrayList<>();
-        Queue<Integer> queue= new LinkedList<>();
-        
         int n=progresses.length;
-        int[] left=new int[n];
+        int[] remain=new int[n];
         for(int i=0;i<n;i++){
-            left[i]=(int)Math.ceil((100.0-progresses[i])/speeds[i]);
-            System.out.println(left[i]);
+            remain[i]=(int)Math.ceil((100.0-progresses[i])/speeds[i]);
         }
         
-        int cnt=0;
-        for(int d : left){
-            if(queue.isEmpty()){
-                queue.offer(d);
+        List<Integer> list=new ArrayList<>();
+        int start=remain[0];
+        int cnt=1;
+        for(int i=1;i<n;i++){
+            //덜걸리면 함꼐 배포
+            if(start>=remain[i]){
+                cnt++;
             } else{
-                if(queue.peek()<d){
-                    result.add(queue.size());
-                    queue.clear();
-                    queue.offer(d);
-                } else {
-                    queue.offer(d);
-                }
+                list.add(cnt);
+                cnt=1;
+                start=remain[i];
             }
         }
-        result.add(queue.size());
         
-        return result.stream().mapToInt(i->i).toArray();
+        list.add(cnt); //마지막 기능
+        
+        return list.stream().mapToInt(i->i).toArray();
     }
 }
