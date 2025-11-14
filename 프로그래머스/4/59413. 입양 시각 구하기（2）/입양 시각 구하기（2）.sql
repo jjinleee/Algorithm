@@ -1,13 +1,12 @@
 -- 코드를 입력하세요
-with hours (hour) as(
-    select 0 as hour
-    from dual
-    union all
-    select hour+1
-    from hours
-    where hour<23
-)
-select h.hour, nvl(count(to_char(o.datetime, 'hh24')),0) as count
-from hours h left join animal_outs o on h.hour=to_char(o.datetime,'hh24')
-group by h.hour
-order by hour
+WITH HOURS (HOUR) AS (
+    SELECT 0 AS HOUR FROM DUAL
+    UNION ALL
+    SELECT HOUR+1 AS HOUR
+    FROM HOURS
+    WHERE HOUR<23
+) 
+SELECT HOUR, NVL(COUNT(TO_CHAR(O.DATETIME,'HH24')),0) AS COUNT
+FROM HOURS H LEFT JOIN ANIMAL_OUTS O ON H.HOUR=TO_CHAR(O.DATETIME, 'HH24')
+GROUP BY HOUR
+ORDER BY HOUR
