@@ -1,35 +1,29 @@
 import java.util.*;
+
 class Solution {
     public String[] solution(String[] record) {
-        List<String[]> order= new ArrayList<>();
-        HashMap<String,String> user=new HashMap<>();
+        List<String[]> list= new ArrayList<>();
+        Map<String,String> id=new HashMap<>();
         
-        for(String log:record){
-            String[] temp=log.split(" ");
-            String action=temp[0];
-            String id=temp[1];
+        for(String r : record){
+            String[] tmp=r.split(" ");
+            String cmd=tmp[0];
+            String uid=tmp[1];
             
-            if(action.equals("Enter")||action.equals("Change")){
-                String nickname=temp[2];
-                user.put(id,nickname);
-            }
-            if(!action.equals("Change")){
-                order.add(new String[]{id,action});
-            }
+            if(cmd.equals("Enter")||cmd.equals("Change")){
+                String name=tmp[2];
+                id.put(uid,name);
+            } 
+            if(!cmd.equals("Change")) list.add(new String[]{uid,cmd});
         }
-        
-        String[] result= new String[order.size()];
+        String[] result=new String[list.size()];
         int i=0;
-        for(String[] msg:order){
-            String id=msg[0];
-            String action=msg[1];
-            String nickname=user.get(id);
+        for(String[] s : list){
+            String idx=s[0];
+            String cmd=s[1];
             
-            if(action.equals("Enter")){
-                result[i++]=nickname+"님이 들어왔습니다.";
-            } else if(action.equals("Leave")){
-                result[i++]=nickname+"님이 나갔습니다.";
-            }
+            if(cmd.equals("Enter")) result[i++]=id.get(idx)+"님이 들어왔습니다.";
+            else if(cmd.equals("Leave")) result[i++]=id.get(idx)+"님이 나갔습니다.";
         }
         
         return result;
