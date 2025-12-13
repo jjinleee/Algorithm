@@ -2,36 +2,48 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String[] id_list, String[] report, int k) {
-        //각 유저별 메일횟수저장(map은 순서보장이 안됨)
-        Map<String,Integer> users=new HashMap<>();
-        for(String id : id_list){
-            users.put(id,0);
-        }
-        //신고당한 사람별 신고한 사람 목록(한사람의 동일 유저 중복신고안됨->Set사용)
-        Map<String,Set<String>> reported=new HashMap<>();
-        for(String r : report){
-            String reportPerson=r.split(" ")[0];
-            String reportedPerson=r.split(" ")[1];
-            reported.putIfAbsent(reportedPerson,new HashSet<>());
-            reported.get(reportedPerson).add(reportPerson);
-        }
+        int n=id_list.length;
+        int[] answer = new int[n];
         
-        //k번이상 신고됐는지 체크
-        for(String s : reported.keySet()){
-            //정지된 유저를 신고한 유저에게 메일
-            if(reported.get(s).size()>=k){
-                Set<String> mail=reported.get(s);
-                for(String name : mail){
-                    users.put(name,users.get(name)+1);
-                }
+        //유저별 신고목록
+        Map<String,Set<String>> reporting=new LinkedHashMap<>();
+        for(int i=0;i<n;i++){
+            reporting.put(id_list[i],new HashSet<>());
+        }
+        //신고당한 목록
+        Map<String,Integer> reported=new HashMap<>();      
+        
+        //신고이력정리
+        for(String r : report){
+            String[] tmp=r.split(" ");
+            String a=tmp[0];
+            String b=tmp[1];
+            
+            reporting.get(a).add(b);
+        }
+        //신고횟수카운트
+        for(String p : reporting.keySet()){
+            Set<String> tmp=reporting.get(p);
+            for(String t : tmp){
+                reported.put(t,reported.getOrDefault(t,0)+1);
             }
         }
-        
-        int[] answer=new int[id_list.length];
-        int y=0;
-        for(String id : id_list){
-            answer[y++]=users.get(id);
+        //정지된회원
+        List<String> stop=new ArrayList<>();
+        for(String r : reported.keySet()){
+            if(reported.get(r)>=k) stop.add(r);
         }
+        
+        int i=0;
+        for(String p : reporting.keySet()){
+            int cnt=0;
+            Set<String> tmp=reporting.get(p);
+            for(String s : stop){
+                if(tmp.contains(s)) cnt++;
+            }
+            answer[i++]=cnt;
+        }
+        
         
         return answer;
     }
