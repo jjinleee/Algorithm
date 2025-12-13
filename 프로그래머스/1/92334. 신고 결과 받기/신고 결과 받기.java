@@ -5,43 +5,29 @@ class Solution {
         int n=id_list.length;
         int[] answer = new int[n];
         
-        //유저별 신고목록
-        Map<String,Set<String>> reporting=new LinkedHashMap<>();
+        Map<String,Set<String>> reporting=new HashMap<>();
         for(int i=0;i<n;i++){
             reporting.put(id_list[i],new HashSet<>());
         }
-        //신고당한 목록
-        Map<String,Integer> reported=new HashMap<>();      
-        
-        //신고이력정리
-        for(String r : report){
+        Map<String,Integer> reported= new HashMap<>();
+        for(String r: report){
             String[] tmp=r.split(" ");
-            String a=tmp[0];
-            String b=tmp[1];
+            String from=tmp[0];
+            String to=tmp[1];
             
-            reporting.get(a).add(b);
-        }
-        //신고횟수카운트
-        for(String p : reporting.keySet()){
-            Set<String> tmp=reporting.get(p);
-            for(String t : tmp){
-                reported.put(t,reported.getOrDefault(t,0)+1);
+            if(reporting.get(from).add(to)){
+                reported.put(to, reported.getOrDefault(to,0)+1);
             }
-        }
-        //정지된회원
-        List<String> stop=new ArrayList<>();
-        for(String r : reported.keySet()){
-            if(reported.get(r)>=k) stop.add(r);
         }
         
-        int i=0;
-        for(String p : reporting.keySet()){
+        for(int i=0;i<n;i++){
+            String user=id_list[i];
             int cnt=0;
-            Set<String> tmp=reporting.get(p);
-            for(String s : stop){
-                if(tmp.contains(s)) cnt++;
+            
+            for(String target : reporting.get(user)){
+                if(reported.getOrDefault(target,0)>=k) cnt++;
             }
-            answer[i++]=cnt;
+            answer[i]=cnt;
         }
         
         
