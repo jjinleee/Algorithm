@@ -3,27 +3,27 @@ import java.util.*;
 class Solution {
     public int solution(int[][] board, int[] moves) {
         int answer = 0;
-        int row=board.length;
-        int col=board[0].length;
+        int n=board.length;
+        Stack<Integer> pick=new Stack<>();
+        //박스를 세로로 담고싶음
+        List<List<Integer>> list=new ArrayList<>();
+        for(int i=0;i<=n;i++) list.add(new ArrayList<>());
         
-        Stack<Integer> stack=new Stack<>(); //내가뽑은인형쌓음
-        for(int i=0;i<moves.length;i++){
-            int pickCol=moves[i]-1; //뽑을열
-            for(int j=0;j<row;j++){
-                int num=board[j][pickCol];
-                //0이 아니면 뽑고 0으로 변경
-                if(num!=0){
-                    //같으면 터뜨림
-                    if(!stack.isEmpty() && stack.peek()==num) {                   
-                        stack.pop();
-                        answer+=2;
-                    } else stack.push(num);
-                    
-                    //뽑은건 0으로 변경
-                    board[j][pickCol]=0;
-                    break; //하나뽑았으면 그만
-                }
-            }    
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(board[j][i]!=0) list.get(i).add(board[j][i]);
+            }
+        }
+        
+        for(int m : moves){
+            if(!list.get(m-1).isEmpty()){
+                int p=list.get(m-1).get(0);
+                if(!pick.isEmpty() && pick.peek()==p){
+                    pick.pop();
+                    answer+=2;
+                } else pick.push(p);
+                list.get(m-1).remove(0);
+            }
         }
         
         return answer;
