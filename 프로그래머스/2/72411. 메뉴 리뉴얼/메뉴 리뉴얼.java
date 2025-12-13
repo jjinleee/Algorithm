@@ -1,48 +1,45 @@
 import java.util.*;
 
 class Solution {
+    Map<String,Integer> countMap=new HashMap<>();
     public String[] solution(String[] orders, int[] course) {
-        List<String> result = new ArrayList<>();
-
-        for (int c : course) {
-            Map<String, Integer> map = new HashMap<>();
-            int max = 0;
-
-            for (String order : orders) {
-                char[] chars = order.toCharArray();
-                Arrays.sort(chars);
-                combination(chars, new StringBuilder(), 0, c, map);
+        List<String> answer=new ArrayList<>();
+        
+        for(int c : course){
+            countMap.clear();
+            
+            for(String order: orders){
+                char[] arr=order.toCharArray();
+                Arrays.sort(arr);
+                dfs(arr,0,c,new StringBuilder());
             }
-
-            for (String key : map.keySet()) {
-                int count = map.get(key);
-                if (count >= 2) {
-                    if (count > max) {
-                        max = count;
-                    }
-                }
+            
+            int max=0;
+            for(int v : countMap.values()){
+                if(v>=2) max=Math.max(max,v);
             }
-
-            for (String key : map.keySet()) {
-                if (map.get(key) == max && max >= 2) {
-                    result.add(key);
-                }
+            
+            for(Map.Entry<String,Integer> e : countMap.entrySet()){
+                if(e.getValue()==max && max>=2) answer.add(e.getKey());
             }
         }
 
-        Collections.sort(result);
-        return result.toArray(new String[0]);
+        Collections.sort(answer);
+        
+        
+        return answer.toArray(new String[0]);
     }
-
-    private void combination(char[] arr, StringBuilder sb, int idx, int len, Map<String, Integer> map) {
-        if (sb.length() == len) {
-            map.put(sb.toString(), map.getOrDefault(sb.toString(), 0) + 1);
+    void dfs(char[] arr, int idx, int targetLen, StringBuilder sb){
+        if(sb.length()==targetLen){
+            String key=sb.toString();
+            countMap.put(key, countMap.getOrDefault(key,0)+1);
             return;
         }
-        for (int i = idx; i < arr.length; i++) {
+        
+        for(int i=idx; i<arr.length;i++){
             sb.append(arr[i]);
-            combination(arr, sb, i + 1, len, map);
-            sb.deleteCharAt(sb.length() - 1); 
+            dfs(arr, i+1, targetLen, sb);
+            sb.deleteCharAt(sb.length()-1);
         }
     }
 }
