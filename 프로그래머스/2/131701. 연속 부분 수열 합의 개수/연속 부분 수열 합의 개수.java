@@ -3,22 +3,22 @@ import java.util.*;
 class Solution {
     public int solution(int[] elements) {
         int answer = 0;
-        Set<Integer> set= new HashSet<>();
         int n=elements.length;
+        int[] prefix=new int[2*n+1];
         
-        //길이 1~n 까지 반복
-        for(int i=1;i<=n;i++){
-            //시작인덱스
-            for(int j=0;j<n;j++){
-                int sum=0;
-                for(int k=j;k<j+i;k++){
-                    if(k>=n) sum+=elements[k%n];
-                    else sum+=elements[k];
-                }
-                set.add(sum);
-            }            
+        for(int i=0;i<2*n;i++){
+            prefix[i+1]=prefix[i]+elements[i%n];
         }
         
+        Set<Integer> set= new HashSet<>();
+        for(int i=1;i<=n;i++){
+            int sum=0;
+            for(int start=0;start<n;start++){
+                sum=prefix[start+i]-prefix[start];
+                set.add(sum);
+            }
+        }
+            
         return set.size();
     }
 }
