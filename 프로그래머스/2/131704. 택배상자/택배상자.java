@@ -3,32 +3,23 @@ import java.util.*;
 class Solution {
     public int solution(int[] order) {
         int answer = 0;
-        Stack<Integer> stack = new Stack<>();
-        int n = order.length;
+        Stack<Integer> stack=new Stack<>();
+        int idx=1; //컨테이너벨트
+        int i=0;  //처리할 주문
+        int n=order.length;
         
-        int idx = 1;   // 컨베이어에서 다음에 올 박스 번호
-        int i = 0;     // order에서 현재 실어야 할 인덱스
-        
-        while (i < n) {
-            int target = order[i]; // 이번에 실어야 할 박스 번호
-            
-            if (idx == target) {
-                // 컨베이어에서 바로 싣기
+        while(i<n){
+            int target=order[i];
+            if(idx==target){ //컨테이너벨트에 있음
                 idx++;
+                i++;
                 answer++;
-                i++; // 이 주문 처리 완료
-            } else if (!stack.isEmpty() && stack.peek() == target) {
-                // 보조 컨테이너에서 싣기
+            } else if(!stack.isEmpty() && stack.peek()==target){//보조컨테이너에 있음
                 stack.pop();
+                i++;
                 answer++;
-                i++; // 이 주문 처리 완료
-            } else if (idx <= n) {
-                // 아직 컨베이어에 상자가 남아 있으면 일단 스택으로 보냄
-                stack.push(idx++);
-            } else {
-                // 컨베이어도 끝났고, 스택 top도 target이 아님 → 더 이상 방법 없음
-                break;
-            }
+            } else if(idx<=n) stack.push(idx++); //보조 컨테이너에 넣음
+            else break; //컨테이너 벨트도 끝났고 보조 컨테이너에도 없음
         }
         
         return answer;
