@@ -2,53 +2,48 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] fees, String[] records) {
-        Map<Integer, Integer> inMap=new HashMap<>();
-        Map<Integer, Integer> totalMap=new HashMap<>();
+        Map<Integer,Integer> car=new HashMap<>();
+        Map<Integer,Integer> total=new HashMap<>();
+        List<Integer> list=new ArrayList<>();
         
         for(String r : records){
-            String[] tmp=r.split(" ");
-            int time=toMinute(tmp[0]);
-            int car=Integer.parseInt(tmp[1]);
-            String type=tmp[2];
+            String time=r.split(" ")[0];
+            int carNum=Integer.parseInt(r.split(" ")[1]);
             
             //출차
-            if(type.equals("IN")){
-                inMap.put(car, time);
-            } else {
-                totalMap.put(car, totalMap.getOrDefault(car,0)+time-inMap.get(car));
-                inMap.remove(car);
-            }
+            if(car.containsKey(carNum)){
+                int spend=toMinuite(time)-car.get(carNum);
+                total.put(carNum, total.getOrDefault(carNum,0)+spend);
+                car.remove(carNum);
+            } else car.put(carNum, toMinuite(time)); //입차
+            
         }
-        //출차기록없는 차 처리
-        for(Map.Entry<Integer, Integer> entry : inMap.entrySet()){
-            int car=entry.getKey();
-            int inTime=entry.getValue();
-            int diff=23*60+59-inTime;
-            totalMap.put(car, totalMap.getOrDefault(car, 0) + diff);
+        //출차가 안찍힌차 처리
+        for(int carNum: car.keySet()){
+            int spend=23*60+59-car.get(carNum);
+            total.put(carNum, total.getOrDefault(carNum,0)+spend);
         }
-        //주차요금 계산
-        int[] carNum=totalMap.keySet().stream().mapToInt(i->i).toArray();
-        int[] answer= new int[carNum.length];
         
-        Arrays.sort(carNum);
-        int idx=0;
-        for(int c : carNum){
-            int use=totalMap.get(c);
-            if(use<=fees[0]){
-                answer[idx++]=fees[1];
-            } else{
-                int sum=fees[1];
-                sum+=(int)Math.ceil((double)(use-fees[0])/fees[2])*fees[3];
-                answer[idx++]=sum;
+        List<Integer> order=new ArrayList<>(total.keySet());
+        Collections.sort(order);
+        for(int c : order){
+            int time=total.get(c);
+            if(time<=fees[0]) list.add(fees[1]);
+            else{
+                int extra=time-fees[0];
+                int cost=fees[1]+(int)Math.ceil((double)extra/fees[2])*fees[3];
+                list.add(cost);
             }
         }
         
+        int[] answer= new int[list.size()];
+        for(int i=0;i<list.size();i++) answer[i]=list.get(i);
         
         return answer;
     }
-    int toMinute(String t){
-        int h=Integer.parseInt(t.split(":")[0]);
-        int m=Integer.parseInt(t.split(":")[1]);
+    int toMinuite(String time){
+        int h=Integer.parseInt(time.split(":")[0]);
+        int m=Integer.parseInt(time.split(":")[1]);
         
         return 60*h+m;
     }
