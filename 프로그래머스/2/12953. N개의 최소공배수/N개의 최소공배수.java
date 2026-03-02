@@ -17,7 +17,6 @@ class Solution {
             int tmp=a%b;
             a=b;
             b=tmp;
-            gcd(b, tmp);
         }
         return a;
     }
