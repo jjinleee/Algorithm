@@ -2,21 +2,25 @@ import java.util.*;
 
 class Solution {
     int solution(int[][] land) {
+        int answer = 0;
         int n=land.length;
-
+        int[][] dp=new int[n][4];
+        for(int i=0;i<4;i++) dp[0][i]=land[0][i];
+        
         for(int i=1;i<n;i++){
-            land[i][0]+=Math.max(Math.max(land[i-1][1], land[i-1][2]),land[i-1][3]);
-            land[i][1]+=Math.max(Math.max(land[i-1][0], land[i-1][2]),land[i-1][3]);
-            land[i][2]+=Math.max(Math.max(land[i-1][0], land[i-1][1]),land[i-1][3]);
-            land[i][3]+=Math.max(Math.max(land[i-1][0], land[i-1][1]),land[i-1][2]);
-
+            for(int j=0;j<4;j++){
+                int max=0;
+                for(int k=0;k<4;k++){
+                    if(j==k) continue;
+                    max=Math.max(max, dp[i-1][k]);
+                }
+                dp[i][j]=max+land[i][j];
+            }
         }
-        
-        int last=land[n-1][0];
-        last = Math.max(last, land[n-1][1]);
-        last = Math.max(last, land[n-1][2]);
-        last = Math.max(last, land[n-1][3]);
-        
-        return last;
+
+        for(int i=0;i<4;i++) answer=Math.max(answer, dp[n-1][i]);
+        // [실행] 버튼을 누르면 출력 값을 볼 수 있습니다.
+
+        return answer;
     }
 }
