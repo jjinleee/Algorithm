@@ -1,30 +1,31 @@
 import java.util.*;
 
 class Solution {
-    private int cnt=0;
-    private int[] queens;
+    int answer;
+    int[] queen;
     
     public int solution(int n) {
-        queens=new int[n];
+        queen=new int[n];
         backtrack(0,n);
-        return cnt;
+        
+        return answer;
     }
-    private void backtrack(int row,int n){
+    void backtrack(int row, int n){
         if(row==n){
-            cnt++;
+            answer++;
             return;
         }
-        for(int col=0;col<n;col++){
-            if(isSafe(row,col)){
-                queens[row]=col;
+        for(int i=0;i<n;i++){
+            if(isSafe(row,i)){
+                queen[row]=i;
                 backtrack(row+1,n);
             }
         }
     }
-    private boolean isSafe(int row,int col){
-        for(int prevrow=0;prevrow<row;prevrow++){
-            int prevcol=queens[prevrow];
-            if(prevcol==col || Math.abs(prevcol-col)==Math.abs(prevrow-row)){
+    boolean isSafe(int row, int col){
+        for(int i=0;i<row;i++){
+            int prevcol=queen[i];
+            if(prevcol==col || Math.abs(prevcol-col)==Math.abs(row-i)){
                 return false;
             }
         }
