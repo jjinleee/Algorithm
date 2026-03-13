@@ -1,21 +1,19 @@
 import java.util.*;
 
 class Solution {
-    int cnt=0;
+    int answer=0;
     public int solution(int[] numbers, int target) {
+        dfs(0,0,numbers, target);
         
-        dfs(numbers,0,0,target);
-        
-        return cnt;
-        
+        return answer;
     }
-    void dfs(int[] numbers, int idx, int current, int target){
+    void dfs(int cur, int idx, int[] numbers, int target){
         if(idx==numbers.length){
-            if(current==target) cnt++;
+            if(cur==target) answer++;
             return;
         }
         
-        dfs(numbers, idx+1, current+numbers[idx],target);
-        dfs(numbers, idx+1, current-numbers[idx],target);
+        dfs(cur+numbers[idx], idx+1, numbers, target);
+        dfs(cur-numbers[idx], idx+1, numbers, target);
     }
 }
