@@ -3,35 +3,36 @@ import java.util.*;
 class Solution {
     int[] dx={-1,1,0,0};
     int[] dy={0,0,-1,1};
-    int n;
-    int m;
+    int n,m;
+    int[][] map;
+    boolean[][] visited;
     public int solution(int[][] maps) {
+        map=maps;
         n=maps.length;
         m=maps[0].length;
+        visited=new boolean[n][m];
         
-        boolean[][] visited= new boolean[n+1][m+1];
-        Queue<int[]> q= new LinkedList<>();
+        Queue<int[]> q=new LinkedList<>();
         q.offer(new int[]{0,0});
         visited[0][0]=true;
         
         while(!q.isEmpty()){
             int[] cur=q.poll();
-            int x=cur[0];
-            int y=cur[1];;
+            int cx=cur[0];
+            int cy=cur[1];
+            
             for(int i=0;i<4;i++){
-                int nx=x+dx[i];
-                int ny=y+dy[i];
+                int nx=cx+dx[i];
+                int ny=cy+dy[i];
                 
-                if(nx>=0 && nx<n && ny>=0  && ny<m){
-                    if(!visited[nx][ny] && maps[nx][ny]==1){
-                        q.offer(new int[]{nx,ny});
-                        visited[nx][ny]=true;
-                        maps[nx][ny]=maps[x][y]+1;
-                    }
+                if(nx>=0 && nx<n && ny>=0 && ny<m && !visited[nx][ny] &&maps[nx][ny]==1){
+                    visited[nx][ny]=true;
+                    maps[nx][ny]=map[cx][cy]+1;
+                    q.offer(new int[]{nx,ny});
                 }
             }
         }
         
-        return maps[n-1][m-1]==1 ? -1 : maps[n-1][m-1];
+        return map[n-1][m-1]==1 ? -1 : map[n-1][m-1];
     }
 }
