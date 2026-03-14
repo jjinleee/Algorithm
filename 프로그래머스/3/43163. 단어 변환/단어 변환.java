@@ -2,32 +2,39 @@ import java.util.*;
 
 class Solution {
     public int solution(String begin, String target, String[] words) {
-        boolean[] visited=new boolean[words.length];
-        int cnt=dfs(begin,target,words, 0 , visited);
+        int answer = 0;
+        int n=words.length;
         
-        return cnt==Integer.MAX_VALUE ? 0 : cnt;
-    }
-    static int dfs(String current, String target, String[] words, int depth, boolean[] visited){
-        if(current.equals(target)) return depth;        
+        Queue<String> q= new LinkedList<>();
+        boolean[] visited= new boolean[n];
+        q.offer(begin);
         
-        int best=Integer.MAX_VALUE;
-        for(int i=0;i<words.length;i++){
-            if(!visited[i] && isDiff(current, words[i])){
-                visited[i]=true;
-                int res=dfs(words[i], target, words, depth+1, visited);
-                if(res<best) best=res;
-                visited[i]=false; 
-            }            
+        while(!q.isEmpty()){
+            int size=q.size();
+            
+            for(int i=0;i<size;i++){
+                String cur=q.poll();
+                
+                if(cur.equals(target)) return answer;
+                
+                for(int j=0;j<n;j++){
+                    if(!visited[j] && isDiff(cur, words[j])){
+                        visited[j]=true;
+                        q.offer(words[j]);
+                    }
+                }
+            }
+            answer++;
         }
         
-        return best;
+        return 0;
     }
-    static boolean isDiff(String a, String b){
+    boolean isDiff(String a, String b){
         int cnt=0;
-        
         for(int i=0;i<a.length();i++){
-            if(a.charAt(i)!= b.charAt(i)) cnt++;
+            if(a.charAt(i)!=b.charAt(i)) cnt++;
         }
+        
         return cnt==1 ? true : false;
     }
 }
