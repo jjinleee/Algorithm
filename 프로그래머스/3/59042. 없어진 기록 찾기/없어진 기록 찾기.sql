@@ -1,8 +1,8 @@
 -- 코드를 입력하세요
-SELECT ANIMAL_ID, NAME
-FROM ANIMAL_OUTS
-WHERE ANIMAL_ID NOT IN (
-    SELECT ANIMAL_ID
-    FROM ANIMAL_INS
+SELECT animal_id, name
+from animal_outs
+where animal_id not in (
+    select animal_id
+    from animal_ins
 )
-ORDER BY ANIMAL_ID
+order by animal_id
