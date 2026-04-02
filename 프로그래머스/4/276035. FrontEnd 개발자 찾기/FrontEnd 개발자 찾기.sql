@@ -1,5 +1,7 @@
 -- 코드를 작성해주세요
-SELECT DISTINCT ID, EMAIL, FIRST_NAME, LAST_NAME
-FROM DEVELOPERS D JOIN SKILLCODES S ON D.SKILL_CODE & S.CODE=S.CODE
-WHERE CATEGORY='Front End'
-ORDER BY ID
+-- 코드를 작성해주세요
+select distinct id, email, first_name, last_name
+from developers d join skillcodes s 
+on d.skill_code & code =code
+where category='Front End'
+order by id
