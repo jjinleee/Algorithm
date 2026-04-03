@@ -2,14 +2,13 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] nums) {
-        Map<Integer,Integer> pocketmons= new HashMap<>();
+        int answer = 0;
+        Map<Integer,Integer> map=new HashMap<>();
         for(int n : nums){
-            pocketmons.put(n,pocketmons.getOrDefault(n,0)+1);
+            map.put(n, map.getOrDefault(n,0)+1);
         }
-        
-        
-        int max = pocketmons.keySet().size();
-        if(nums.length/2<=max) return nums.length/2;
-        else return max;
+        int n=nums.length;
+        if(map.size()>=n/2) return n/2;
+        return map.size();
     }
 }
