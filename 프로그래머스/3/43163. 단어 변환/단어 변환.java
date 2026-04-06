@@ -5,32 +5,38 @@ class Solution {
         int answer = 0;
         int n=words.length;
         
-        Queue<String> q= new LinkedList<>();
-        boolean[] visited= new boolean[n];
+        if(begin.equals(target)) return 0;
+        List<String> list=new ArrayList<>();
+        for(String w : words) list.add(w);
+        if(!list.contains(target)) return 0;
+        Arrays.sort(words);
+        
+        boolean[] visited=new boolean[n];
+        Queue<String> q=new LinkedList<>();
         q.offer(begin);
         
+        
         while(!q.isEmpty()){
-            int size=q.size();
+            String cur=q.poll();
+            if(cur.equals(target)) return answer;
             
-            for(int i=0;i<size;i++){
-                String cur=q.poll();
-                
-                if(cur.equals(target)) return answer;
-                
-                for(int j=0;j<n;j++){
-                    if(!visited[j] && isDiff(cur, words[j])){
-                        visited[j]=true;
-                        q.offer(words[j]);
-                    }
+            for(int i=0;i<n;i++){
+                if(!visited[i] && isDiff(cur,words[i])){
+                    answer++;
+                    q.offer(words[i]);
+                    System.out.println(words[i]);
+                    visited[i]=true;
+                    break;
                 }
             }
-            answer++;
         }
         
-        return 0;
+        
+        return answer;
     }
     boolean isDiff(String a, String b){
         int cnt=0;
+        
         for(int i=0;i<a.length();i++){
             if(a.charAt(i)!=b.charAt(i)) cnt++;
         }
