@@ -2,17 +2,16 @@ import java.util.*;
 
 class Solution {
     public String solution(String number, int k) {
-        
-        Stack<Character> stack=new Stack<>();
+        Stack<Integer> stack=new Stack<>();
         for(int i=0;i<number.length();i++){
-            char current=number.charAt(i);
+            int n=number.charAt(i)-'0';
             
-            while(!stack.isEmpty() && stack.peek()<current && k>0){
+            //뒤의 숫자가 더크면 앞에 삭제하기
+            while(!stack.isEmpty() && stack.peek()<n && k>0){
                 stack.pop();
                 k--;
             }
-            
-            stack.push(current);
+            stack.push(n);
         }
         
         while(k>0){
@@ -21,11 +20,9 @@ class Solution {
         }
         
         StringBuilder sb= new StringBuilder();
-        for(char r : stack){
-            sb.append(r);
-        }
+        while(!stack.isEmpty()) sb.append(stack.pop());
+        String answer=sb.reverse().toString();
         
-        return sb.toString();
-        
+        return answer;
     }
 }
