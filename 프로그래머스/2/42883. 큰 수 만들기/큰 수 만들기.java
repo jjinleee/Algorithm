@@ -5,9 +5,7 @@ class Solution {
         Stack<Integer> stack=new Stack<>();
         for(int i=0;i<number.length();i++){
             int n=number.charAt(i)-'0';
-            
-            //뒤의 숫자가 더크면 앞에 삭제하기
-            while(!stack.isEmpty() && stack.peek()<n && k>0){
+            while(!stack.isEmpty() && k>0 && stack.peek()<n){
                 stack.pop();
                 k--;
             }
@@ -18,7 +16,6 @@ class Solution {
             stack.pop();
             k--;
         }
-        
         StringBuilder sb= new StringBuilder();
         while(!stack.isEmpty()) sb.append(stack.pop());
         String answer=sb.reverse().toString();
