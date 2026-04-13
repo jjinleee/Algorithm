@@ -2,22 +2,14 @@ import java.util.*;
 
 class Solution {
     public int solution(String[][] clothes) {
-        Map<String, Integer> codi=new HashMap<>();
-        
+        int answer = 1;
+        Map<String,Integer> type=new HashMap<>();
         for(String[] c : clothes){
-            String type=c[1];
-            String clo=c[0];
-            
-            codi.put(type,codi.getOrDefault(type,0)+1);
+            type.put(c[1],type.getOrDefault(c[1],0)+1);
         }
-        
-        int answer=1;
-        for(int n : codi.values()){
-            answer*=(n+1);
+        for(String t : type.keySet()){
+            answer*=(type.get(t)+1);
         }
-        
         return answer-1;
-        
-        
     }
 }
