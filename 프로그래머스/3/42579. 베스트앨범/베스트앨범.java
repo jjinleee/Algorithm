@@ -2,38 +2,38 @@ import java.util.*;
 
 class Solution {
     static class Song{
-        int index;
-        int play;
+        int index; //고유번호
+        int time;  //재생횟수
         
-        Song(int index, int play){
+        Song(int index, int time){
             this.index=index;
-            this.play=play;
+            this.time=time;
         }
     }
-    
     public int[] solution(String[] genres, int[] plays) {
-        Map<String,Integer> genre=new HashMap<>();
-        Map<String,List<Song>> song=new HashMap<>();
+        List<Integer> list=new ArrayList<>();
+        Map<String, Integer> genrePlay=new HashMap<>(); //장르별 재생횟수
+        Map<String, List<Song>> genreSong=new HashMap<>(); //장르별 노래
         
         int n=genres.length;
         for(int i=0;i<n;i++){
-            genre.put(genres[i], genre.getOrDefault(genres[i],0)+plays[i]); //장르별 재생횟수 카운트
-            song.computeIfAbsent(genres[i], k-> new ArrayList<>()).add(new Song(i,plays[i])); //고유번호, 재생횟수
+            String g=genres[i];
+            genrePlay.put(g, genrePlay.getOrDefault(g,0)+plays[i]);
+            genreSong.computeIfAbsent(g, k->new ArrayList<>()).add(new Song(i,plays[i]));
         }
         
-        List<String> maxGenre=new ArrayList<>(genre.keySet());
-        maxGenre.sort((a,b)-> genre.get(b)-genre.get(a));
+        //재생많이 된 장르 내림차순 정렬
+        List<String> genre=new ArrayList<>(genrePlay.keySet());
+        genre.sort((a,b)-> genrePlay.get(b)-genrePlay.get(a));
         
-        //장르별 2곡
-        List<Integer> result= new ArrayList<>();
-        for(String g : maxGenre){
-            List<Song> songs=song.get(g);
-            songs.sort((a,b)-> a.play==b.play ? a.index-b.index : b.play-a.play);
-            result.add(songs.get(0).index);
-            if(songs.size()>1) result.add(songs.get(1).index);
+        //장르내 재생많이 된 곡 내림차순 정렬
+        for(String gen : genre){
+            List<Song> songs=genreSong.get(gen);
+            songs.sort((a,b)-> a.time==b.time ? a.index-b.index : b.time-a.time);
+            list.add(songs.get(0).index);
+            if(songs.size()>1) list.add(songs.get(1).index);
         }
         
-        return result.stream().mapToInt(i->i).toArray();
-        
+        return list.stream().mapToInt(i->i).toArray();
     }
 }
