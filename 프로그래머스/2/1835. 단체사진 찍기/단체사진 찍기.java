@@ -36,8 +36,8 @@ class Solution {
             char cond=d.charAt(3);
             int n=d.charAt(4)-'0';
             
-            int real=Math.abs(tmp[b-'A']-tmp[a-'A'])-1;
-            
+            int real=Math.abs(tmp[b-'A']-tmp[a-'A'])-1;//칸수차이가 아니고 사람수 세야함 주의
+             
             if(cond=='='){
                 if(real!=n) return false;
             } else if(cond=='>'){
