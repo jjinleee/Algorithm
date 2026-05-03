@@ -1,20 +1,19 @@
-WITH MONEY AS (
-    SELECT EMP_NO,
-    CASE 
-        WHEN AVG(SCORE)  >=96 THEN 'S'
-        WHEN AVG(SCORE)>=90 THEN 'A'
-        WHEN AVG(SCORE)  >=80 THEN 'B'
-       ELSE 'C'
-    END AS GRADE
-    FROM HR_GRADE
-    GROUP BY EMP_NO
+-- 코드를 작성해주세요
+with avg_score as (
+    select emp_no, avg(score) as score,
+    case when avg(score)>=96 then 'S'
+    when avg(score)>=90 then 'A'
+    when avg(score)>=80 then 'B'
+    else  'C'
+    end as grade
+    from hr_grade
+    group by emp_no
 )
-SELECT M.EMP_NO, EMP_NAME, GRADE, 
-CASE 
-    WHEN GRADE='S' THEN SAL*0.2
-    WHEN GRADE='A' THEN SAL*0.15
-    WHEN GRADE='B' THEN SAL*0.1
-    ELSE 0 
-END AS BONUS
-FROM HR_EMPLOYEES E JOIN MONEY M ON E.EMP_NO=M.EMP_NO
-ORDER BY M.EMP_NO
+select e.emp_no, emp_name, grade, 
+case when grade='S' then sal*0.2
+when grade='A' then sal*0.15
+when grade='B' then sal*0.1
+else 0 end as bonus
+from  hr_employees e join avg_score s on e.emp_no=s.emp_no
+order by emp_no
+
