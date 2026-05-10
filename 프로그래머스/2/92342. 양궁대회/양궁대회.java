@@ -9,50 +9,47 @@ class Solution {
         dfs(0,0,n,info);
         return answer;
     }
-    void dfs(int idx, int used, int n, int[] info){
-        //모두확인한경우
+    void dfs(int idx, int arrow, int n, int[] info){
         if(idx==11){
-            //남은화살은 0점에
-            if(used<n) lion[10]+=n-used;
-            
+            //남은화살처리
+            if(arrow<n) lion[10]+=n-arrow;
             checkScore(info);
-            
-            if(used<n) lion[10]-=n-used; //원상복구
+            if(arrow<n) lion[10]-=n-arrow;
             
             return;
         }
         
-        int need=info[idx]+1; //현재점수를 이기기 위한 화살수
-        
         //이김
-        if(used+need<=n){
+        int need= info[idx]+1;
+        
+        if(arrow+need<=n){
             lion[idx]=need;
-            dfs(idx+1, used+need,n,info);
+            dfs(idx+1, arrow+need, n, info);
             lion[idx]=0;
         }
         
+        
         //포기
         lion[idx]=0;
-        dfs(idx+1, used,n,info);
+        dfs(idx+1, arrow, n, info);
     }
     void checkScore(int[] info){
-        int apeachScore=0;
         int lionScore=0;
+        int apeachScore=0;
         
         for(int i=0;i<11;i++){
-            if(info[i]==0 && lion[i]==0) continue;
+            if(lion[i]==0 && info[i]==0) continue;
             
             int score=10-i;
-            
             if(lion[i]>info[i]) lionScore+=score;
             else apeachScore+=score;
         }
         
+        if(lionScore<=apeachScore) return;
+        
         int diff=lionScore-apeachScore;
         
-        if(diff<=0) return; //라이언이 짐
-        
-        if(diff>maxDiff){
+        if(maxDiff<diff){
             maxDiff=diff;
             answer=lion.clone();
         } else if(diff==maxDiff){
@@ -60,11 +57,12 @@ class Solution {
         }
     }
     boolean isBetter(){
-        for(int i=10;i>=0 ;i--){
+        for(int i=10;i>=0;i--){
             if(lion[i]>answer[i]) return true;
             else if(lion[i]<answer[i]) return false;
         }
         
         return false;
     }
+    
 }
