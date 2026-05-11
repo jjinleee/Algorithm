@@ -2,40 +2,38 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String msg) {
-        List<Integer> list=new ArrayList<>();
-        Map<String, Integer> dict=new HashMap<>();
-        for(char c='A';c<='Z';c++){
-            dict.put(c+"", c-'A'+1);
+        List<Integer> list= new ArrayList<>();
+        Map<String, Integer> map=new HashMap<>();
+        
+        for(char c ='A';c<='Z';c++){
+            map.put(c+"", c-64);
         }
         
-        int nextidx=27;
+        int last=27;
         int i=0;
         
         while(i<msg.length()){
             String w="";
             int j=i;
             
-            //가장긴 문자열찾기
             while(j<msg.length()){
                 String cur=msg.substring(i,j+1);
                 
-                if(dict.containsKey(cur)){
-                    w=cur;
+                if(map.containsKey(cur)){
                     j++;
+                    w=cur;
                 } else break;
             }
             
-            list.add(dict.get(w));
+            list.add(map.get(w));
             
             if(j<msg.length()){
-                String newWord=msg.substring(i,j+1);
-                dict.put(newWord, nextidx++);
+                map.put(msg.substring(i,j+1),last++);
             }
             
             i+=w.length();
             
-        }        
-        
+        }
         return list.stream().mapToInt(s->s).toArray();
     }
 }
