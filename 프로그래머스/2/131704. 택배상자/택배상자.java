@@ -2,26 +2,36 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] order) {
-        int answer = 0;
-        Stack<Integer> stack=new Stack<>();
-        int idx=1; //컨테이너벨트
-        int i=0;  //처리할 주문
-        int n=order.length;
+        int n = order.length;
+        int i=0;
+        int num=1; //현재순서
         
-        while(i<n){
-            int target=order[i];
-            if(idx==target){ //컨테이너벨트에 있음
-                idx++;
+        Stack<Integer> sub= new Stack<>();
+        while(num<=n){
+            if(num==order[i]){
                 i++;
-                answer++;
-            } else if(!stack.isEmpty() && stack.peek()==target){//보조컨테이너에 있음
-                stack.pop();
+                num++;
+            } else if(!sub.isEmpty() && sub.peek()==order[i]){
+                sub.pop();
                 i++;
-                answer++;
-            } else if(idx<=n) stack.push(idx++); //보조 컨테이너에 넣음
-            else break; //컨테이너 벨트도 끝났고 보조 컨테이너에도 없음
+            } else {
+                sub.push(num);
+                num++;
+            }
         }
         
-        return answer;
+        //마지막처리
+        while(!sub.isEmpty()){
+            if(sub.peek()==order[i]) {
+                i++;
+                sub.pop();
+            }
+            else break;
+        }
+        
+        
+        
+                
+        return i;
     }
 }
