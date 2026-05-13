@@ -2,35 +2,35 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String today, String[] terms, String[] privacies) {
-        List<Integer> answer=new LinkedList<>();
-        int day=toDays(today);
-        //유효기간 저장
-        Map<String,Integer> t=new HashMap<>();
-        for(String term : terms){
-            String[] tmp=term.split(" ");
-            t.put(tmp[0],Integer.parseInt(tmp[1]));
+        List<Integer> list=new ArrayList<>();
+        Map<Character, Integer> term=new HashMap<>(); //약관종류별 유효개월
+        for(String t : terms){
+            String[] tmp=t.split(" ");
+            term.put(tmp[0].charAt(0), Integer.parseInt(tmp[1]));
         }
         
-        //만료기간
+        int now=todays(today); //오늘날짜
+    
         for(int i=0;i<privacies.length;i++){
-            String[] tmp=privacies[i].split(" ");
-            String date=tmp[0];
-            String type=tmp[1];
+            int date=todays(privacies[i].split(" ")[0]); //가입일
+            char c= privacies[i].split(" ")[1].charAt(0); //약관종류
+            int m= term.get(c); //유효개월
             
-            int start=toDays(date);
-            int end=start+t.get(type)*28;
             
-            if(end<=day) answer.add(i+1);
+            if(now-date>= 28*m) list.add(i+1);
         }
         
-        return answer.stream().mapToInt(i->i).toArray();
+        
+        
+        return list.stream().mapToInt(i->i).toArray();
     }
-    int toDays(String date){
-        String[] tmp=date.split("\\.");
+    
+    int todays(String s){
+        String[] tmp=s.split("\\.");
         int y=Integer.parseInt(tmp[0]);
         int m=Integer.parseInt(tmp[1]);
         int d=Integer.parseInt(tmp[2]);
         
-        return y*12*28+m*28+d;
+        return 28*12*y+28*m+d;
     }
 }
