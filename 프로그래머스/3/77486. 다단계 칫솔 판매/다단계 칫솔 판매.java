@@ -1,40 +1,39 @@
 import java.util.*;
+
 class Solution {
-    Map<String,String> graph=new HashMap<>();
-    Map<String,Integer> profit=new HashMap<>();
-    
-    public int[] solution(String[] enroll, String[] referral, String[] seller, int[] amount) {
-        int n=enroll.length;
+    public int[] solution(String[] enroll, String[] referral, String[] seller, int[] amount) {        
+        Map<String, Integer> money=new HashMap<>(); //판매자별 총금액
+        for(String e : enroll) money.put(e, 0);
         
-        for(int i=0;i<n;i++){
-            graph.put(enroll[i],referral[i]);
-            profit.put(enroll[i],0);
+        Map<String, String> people=new HashMap<>(); //참여자, 참여시킨사람
+        for(int i=0;i<referral.length;i++){
+            people.put(enroll[i],referral[i]);
         }
+        
         
         for(int i=0;i<seller.length;i++){
-            String name=seller[i];
-            int money=amount[i]*100;
+            int profit=amount[i]*100; //이익금
+            String cur=seller[i];
             
-            distribute(name,money);
+            while(!cur.equals("-")){
+                int give=profit/10;
+                int keep=profit-give;
+            
+                money.put(cur, money.get(cur)+keep);
+            
+                if(give<1) break;
+                //분배
+                cur=people.get(cur); //그 윗단계사람
+                profit=give;;
+            }
         }
         
-        int[] answer=new int[n];
-        for(int i=0;i<n;i++){
-            answer[i]=profit.get(enroll[i]);
+        
+        int[] answer=new int[enroll.length];
+        for(int i=0;i<enroll.length;i++){
+            answer[i]=money.get(enroll[i]);
         }
         
         return answer;
-        
-    }
-    
-    void distribute(String name, int money){
-        if(money<1 || name.equals("-")) return;
-        
-        int give=money/10;
-        int keep=money-give;
-        
-        profit.put(name, profit.get(name)+keep);
-        
-        distribute(graph.get(name), give);
     }
 }
