@@ -1,39 +1,43 @@
 import java.util.*;
 
 class Solution {
-    static class Song{
-        int index; //고유번호
-        int time;  //재생횟수
+    class Song{
+        int idx;
+        int play;
         
-        Song(int index, int time){
-            this.index=index;
-            this.time=time;
+        Song(int idx, int play){
+            this.idx=idx;
+            this.play=play;
         }
     }
     public int[] solution(String[] genres, int[] plays) {
         List<Integer> list=new ArrayList<>();
-        Map<String, Integer> genrePlay=new HashMap<>(); //장르별 재생횟수
-        Map<String, List<Song>> genreSong=new HashMap<>(); //장르별 노래
         
-        int n=genres.length;
-        for(int i=0;i<n;i++){
-            String g=genres[i];
-            genrePlay.put(g, genrePlay.getOrDefault(g,0)+plays[i]);
-            genreSong.computeIfAbsent(g, k->new ArrayList<>()).add(new Song(i,plays[i]));
+        Map<String, Integer> genrePlay=new HashMap<>(); //장르별 재생횟수
+        Map<String, List<Song>> genreSong=new HashMap<>(); //장르별 재생곡
+        for(int i=0;i<genres.length;i++){
+            genrePlay.put(genres[i], genrePlay.getOrDefault(genres[i],0)+plays[i]);
+            genreSong.computeIfAbsent(genres[i], k-> new ArrayList<>()).add(new Song(i, plays[i]));
+            
         }
         
-        //재생많이 된 장르 내림차순 정렬
+        //재생횟수 내림차순
         List<String> genre=new ArrayList<>(genrePlay.keySet());
-        genre.sort((a,b)-> genrePlay.get(b)-genrePlay.get(a));
+        Collections.sort(genre, (a,b)-> genrePlay.get(b)-genrePlay.get(a));
         
-        //장르내 재생많이 된 곡 내림차순 정렬
-        for(String gen : genre){
-            List<Song> songs=genreSong.get(gen);
-            songs.sort((a,b)-> a.time==b.time ? a.index-b.index : b.time-a.time);
-            list.add(songs.get(0).index);
-            if(songs.size()>1) list.add(songs.get(1).index);
+        for(String g: genre){
+            List<Song> songs= genreSong.get(g);
+            //재생횟수 내림차순, 고유번호 오름차순
+            Collections.sort(songs, (a,b)-> a.play==b.play ? a.idx-b.idx :b.play-a.play);
+            
+            list.add(songs.get(0).idx);
+            if(songs.size()>1){
+                list.add(songs.get(1).idx);
+            } 
+            
         }
         
         return list.stream().mapToInt(i->i).toArray();
+        
     }
 }
