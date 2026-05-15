@@ -3,19 +3,27 @@ import java.util.*;
 class Solution {
     public int solution(int cacheSize, String[] cities) {
         int answer = 0;
+        if (cacheSize == 0) {
+
+            return cities.length * 5;
+
+        }
         
-        Deque<String> q= new ArrayDeque<>();
+        Queue<String> q= new LinkedList<>();
+        
         for(String c : cities){
-            String city=c.toLowerCase();
-            //큐가 비었을때
-            if(q.contains(city)){
-                answer+=1; //캐시히트
-                q.remove(city);
-                q.offer(city);
-            } else {
-                q.offer(city);
+            c=c.toLowerCase();
+            if(!q.isEmpty() && q.contains(c)){ //캐시히트
+                q.remove(c);
+                q.offer(c); 
+                answer+=1;
+            } else {//캐시미스
                 answer+=5;
-                if(q.size()>cacheSize) q.poll();
+                if(q.size()>=cacheSize){ //LRU
+                   q.poll();
+                }
+                q.offer(c); 
+                
             }
         }
         return answer;
