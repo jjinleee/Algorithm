@@ -1,24 +1,24 @@
 import java.util.*;
 
 class Solution {
-    static char[] dict={'A','E','I','O','U'};
-    static List<String> list=new ArrayList<>();
+    char[] dict={'A','E','I','O','U'};
+    List<String> list=new ArrayList<>();
     public int solution(String word) {
+        int answer = 0;
+    
+        dfs(0, "");
         
-        find("",0);
         for(int i=0;i<list.size();i++){
-            if(word.equals(list.get(i))){
-                return i;
-            }
+            if(word.equals(list.get(i))) return i;
         }
         return 0;
     }
-    static void find(String current, int depth){
-        list.add(current);
-        if(depth==5) return;
+    void dfs(int len,String cur){
+        list.add(cur);
+        if(len==5) return;
         
-        for(int i=0;i<dict.length;i++){
-            find(current+dict[i], depth+1);
+        for(int i=0;i<5;i++){
+            dfs(len+1, cur+dict[i]);
         }
     }
 }
