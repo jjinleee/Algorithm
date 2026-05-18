@@ -2,45 +2,41 @@ import java.util.*;
 
 class Solution {
     public int solution(String str1, String str2) {
-        //소문자로 변경
+        int answer = 0;
+
         str1=str1.toLowerCase();
         str2=str2.toLowerCase();
         
-        //두글자씩 만들고 특수문자,공백,숫자 포함 원소 버림
-        List<String> list= new ArrayList<>();
+        List<String> l1=new ArrayList<>();
+        List<String> l2=new ArrayList<>();
+        Map<String,Integer> m1=new HashMap<>();
+        Map<String,Integer> m2=new HashMap<>();
+        
         for(int i=0;i<str1.length()-1;i++){
-            String s=str1.substring(i,i+2);
-            if(s.matches("[a-zA-Z]+")) list.add(s);
+            String tmp=str1.substring(i,i+2);
+            if(tmp.matches("[a-z]{2}")) {
+                m1.put(tmp, m1.getOrDefault(tmp,0)+1);
+                l1.add(tmp);
+            }
         }
-        List<String> list2= new ArrayList<>();
         for(int i=0;i<str2.length()-1;i++){
-            String s=str2.substring(i,i+2);
-            if(s.matches("[a-z]{2}")) list2.add(s);
+            String tmp=str2.substring(i,i+2);
+            if(tmp.matches("[a-z]{2}")) {
+                m2.put(tmp, m2.getOrDefault(tmp,0)+1);
+                l2.add(tmp);
+            }
         }
         
-        //교집합, 합집합 개수 구하기
-        Map<String,Integer> map1=new HashMap<>();
-        Map<String,Integer> map2=new HashMap<>();
-        for(String s : list) map1.put(s, map1.getOrDefault(s,0)+1);
-        for(String s : list2) map2.put(s, map2.getOrDefault(s,0)+1);
         
-        int intersection=0;
-        int union=0;
-
-        Set<String> keys = new HashSet<>();
-        keys.addAll(map1.keySet());
-        keys.addAll(map2.keySet());
-
-        for (String key : keys) {
-            int c1 = map1.getOrDefault(key, 0);
-            int c2 = map2.getOrDefault(key, 0);
-
-            intersection += Math.min(c1, c2);
-            union += Math.max(c1, c2);
+        int com=0;
+        for(String m : m1.keySet()){
+            if(m2.containsKey(m)) com+=Math.min(m1.get(m),m2.get(m));
         }
+        int sum=l1.size()+l2.size()-com;
         
-        if (union == 0) return 65536;
-        double answer = (double)intersection/union * 65536;
-        return (int)answer;
+        if(com==0 && sum==0) return 65536;
+        
+        
+        return (int) ((double)com/sum*65536);
     }
 }
