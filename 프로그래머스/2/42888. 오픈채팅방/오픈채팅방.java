@@ -2,30 +2,31 @@ import java.util.*;
 
 class Solution {
     public String[] solution(String[] record) {
-        List<String[]> list= new ArrayList<>();
-        Map<String,String> id=new HashMap<>();
+        Map<String,String> member=new HashMap<>();
+        List<String[]> list=new ArrayList<>();
         
         for(String r : record){
             String[] tmp=r.split(" ");
             String cmd=tmp[0];
-            String uid=tmp[1];
+            String id=tmp[1];
             
-            if(cmd.equals("Enter")||cmd.equals("Change")){
+            if(cmd.equals("Enter") || cmd.equals("Change")){
                 String name=tmp[2];
-                id.put(uid,name);
+
+                member.put(id,name);
             } 
-            if(!cmd.equals("Change")) list.add(new String[]{uid,cmd});
-        }
-        String[] result=new String[list.size()];
-        int i=0;
-        for(String[] s : list){
-            String idx=s[0];
-            String cmd=s[1];
-            
-            if(cmd.equals("Enter")) result[i++]=id.get(idx)+"님이 들어왔습니다.";
-            else if(cmd.equals("Leave")) result[i++]=id.get(idx)+"님이 나갔습니다.";
+            if(!cmd.equals("Change")) list.add(new String[]{id,cmd});
         }
         
-        return result;
+        int i=0;
+        String[] answer=new String[list.size()];
+        for(String[] l : list){
+            String id=l[0];
+            String cmd=l[1];
+            
+            if(cmd.equals("Enter")) answer[i++]=member.get(id)+"님이 들어왔습니다.";
+            else if(cmd.equals("Leave")) answer[i++]=member.get(id)+"님이 나갔습니다.";
+        }
+        return answer;
     }
 }
