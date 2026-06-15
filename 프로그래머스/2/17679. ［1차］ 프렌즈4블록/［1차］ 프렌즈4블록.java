@@ -41,15 +41,16 @@ class Solution {
                     }
                 }
             }
-            for(int col=0;col<n;col++){
-                int writeRow=m-1;
-                
-                for(int row=m-1;row>=0;row--){
-                    if(map[row][col]!='0'){
-                        char val=map[row][col];
-                        map[row][col]='0';
-                        map[writeRow][col]=val;
-                        writeRow--;
+            
+            for(int j=0;j<n;j++){
+                int bottom=m-1;
+                for(int i=m-1;i>=0;i--){
+                    if(map[i][j]!='0'){
+                        map[bottom][j]=map[i][j];
+                        
+                        if(bottom!=i) map[i][j]='0';
+                        
+                        bottom--;
                     }
                 }
             }
