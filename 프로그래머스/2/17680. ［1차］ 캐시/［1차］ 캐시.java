@@ -3,29 +3,31 @@ import java.util.*;
 class Solution {
     public int solution(int cacheSize, String[] cities) {
         int answer = 0;
-        if (cacheSize == 0) {
-
-            return cities.length * 5;
-
-        }
+        Queue<String> q=new LinkedList<>();
         
-        Queue<String> q= new LinkedList<>();
+        if(cacheSize==0) return 5*cities.length;
         
         for(String c : cities){
-            c=c.toLowerCase();
-            if(!q.isEmpty() && q.contains(c)){ //캐시히트
-                q.remove(c);
-                q.offer(c); 
-                answer+=1;
-            } else {//캐시미스
+            String city=c.toLowerCase();
+            
+            if(q.isEmpty()){
+                q.offer(city);
                 answer+=5;
-                if(q.size()>=cacheSize){ //LRU
-                   q.poll();
+            } else if(q.contains(city)) {
+                answer++;
+                q.remove(city);
+                q.offer(city);
+            } else {
+                if(q.size()<cacheSize){
+                    q.offer(city);
+                } else {
+                    q.poll();
+                    q.offer(city);
                 }
-                q.offer(c); 
-                
+                answer+=5;
             }
         }
+        
         return answer;
     }
-}
+} 
