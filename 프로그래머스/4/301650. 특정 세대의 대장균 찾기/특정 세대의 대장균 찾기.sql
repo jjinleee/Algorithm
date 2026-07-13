@@ -1,16 +1,12 @@
--- 코드를 작성해주세요
-WITH RECURSIVE GENERATION AS (
-    -- 1세대
-    SELECT ID, 1 AS GEN
-    FROM ECOLI_DATA
-    WHERE PARENT_ID IS NULL
-    UNION
-    -- 그 다음 세대 재귀
-    SELECT E.ID, G.GEN+1 AS GEN
-    FROM GENERATION G JOIN ECOLI_DATA E ON G.ID=E.PARENT_ID
+with recursive child as (
+    select id ,1 as gen
+    from ecoli_data
+    where parent_id is null
+    union all
+    select e.id, c.gen+1 as gen
+    from ecoli_data e join child c on e.parent_id=c.id
 )
-SELECT ID 
-FROM GENERATION
-WHERE GEN=3
-ORDER BY ID 
-
+select id
+from child
+where gen=3
+order by id
