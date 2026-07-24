@@ -2,11 +2,13 @@ import java.util.*;
 
 class Solution {
     class File{
+        int order;
         String head;
         int number;
         String origin;
         
-        File(String head, int number, String origin){
+        File(int order, String head, int number, String origin){
+            this.order=order;
             this.head=head;
             this.number=number;
             this.origin=origin;
@@ -15,33 +17,41 @@ class Solution {
     public String[] solution(String[] files) {
         List<File> list=new ArrayList<>();
         
-        for(String f : files){
-            int idx=0;
-            while(idx<f.length() && !Character.isDigit(f.charAt(idx))){
-                idx++;
-            }
-            String head=f.substring(0,idx);
-            int idx2=idx;
-            while(idx2<f.length() && Character.isDigit(f.charAt(idx2))){
-                idx2++;
-            }
-            String number=f.substring(idx,idx2 );
+        for(int i=0;i<files.length;i++){
+            String cur=files[i];
+            int j=0;
             
-            list.add(new File(head, Integer.parseInt(number),f));
+            while(j<cur.length() && !Character.isDigit(cur.charAt(j))){ 
+                j++; 
+            }
+            
+            String head=cur.substring(0,j).toLowerCase();
+            int k=j;
+            while(k<cur.length() && Character.isDigit(cur.charAt(k)) && k-j<5){
+                    k++;
+            }
+            int number=Integer.parseInt(cur.substring(j,k));
+            
+            
+            list.add(new File(i,head, number, cur));
         }
         
         Collections.sort(list, (a,b)-> {
-            int headc=a.head.toLowerCase().compareTo(b.head.toLowerCase());
-            if(headc!=0) return headc;
-            
-            return a.number-b.number;
+            int cnt=a.head.compareTo(b.head);
+            if(cnt==0){
+                if(a.number==b.number) return a.order-b.order;
+                return a.number-b.number;
             }
-        );
             
-        String[] answer=new String[list.size()];
-        for(int i=0;i<list.size();i++){
-            answer[i]=list.get(i).origin;
+            return cnt;
+        });
+        
+        String[] answer=new String[files.length];
+        int idx=0;
+        for(File f : list){
+            answer[idx++]=f.origin;
         }
+        
         
         return answer;
     }
