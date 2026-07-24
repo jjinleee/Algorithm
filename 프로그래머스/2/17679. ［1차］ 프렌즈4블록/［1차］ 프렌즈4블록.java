@@ -4,54 +4,58 @@ class Solution {
     public int solution(int m, int n, String[] board) {
         int answer = 0;
         char[][] map=new char[m][n];
-        
         int idx=0;
         for(String b : board) map[idx++]=b.toCharArray();
         
+        boolean[][] del=new boolean[m][n];
         while(true){
-            boolean[][] check=new boolean[m][n];
-            boolean any=false;
-            
-            //2x2 배열찾음
+            del=new boolean[m][n];
+            boolean keep=false;
             for(int i=0;i<m-1;i++){
                 for(int j=0;j<n-1;j++){
-                    char c=map[i][j];
-                    if(c=='0') continue;
                     
-                    if(c==map[i][j+1] &&
-                      c==map[i+1][j] &&
-                      c==map[i+1][j+1]){
-                        check[i][j]=true;
-                        check[i+1][j]=true;
-                        check[i][j+1]=true;
-                        check[i+1][j+1]=true;
-                        any=true;
+                    if(map[i][j]=='X') continue;
+                    
+                    if(map[i][j]==map[i][j+1]){
+                        if(map[i][j]==map[i+1][j] && map[i][j]==map[i+1][j+1]){
+                            del[i][j]=true;
+                            del[i+1][j]=true;
+                            del[i][j+1]=true;
+                            del[i+1][j+1]=true;
+                            keep=true;
+                        }
                     }
-                  
                 }
             }
             
-            if(!any) break; //더이상 지울 블록이 없음
+            if(!keep) break; //더삭제할거없음
             
+            //블록삭제
             for(int i=0;i<m;i++){
                 for(int j=0;j<n;j++){
-                    if(check[i][j]){
-                        map[i][j]='0'; //빈칸표시
+                    if(del[i][j]){
+                        map[i][j]='X';
                         answer++;
                     }
                 }
             }
             
+            //블록아래로 내림
             for(int j=0;j<n;j++){
-                int bottom=m-1;
+                List<Character> list=new ArrayList<>();
                 for(int i=m-1;i>=0;i--){
-                    if(map[i][j]!='0'){
-                        map[bottom][j]=map[i][j];
-                        
-                        if(bottom!=i) map[i][j]='0';
-                        
-                        bottom--;
-                    }
+                    if(map[i][j]!='X') list.add(map[i][j]);
+                }
+                int row=m-1;
+                for(char l : list){
+                    map[row][j]=l;
+                    row--;
+                }
+                
+                
+                while(row>=0){
+                    map[row][j]='X';
+                    row--;
                 }
             }
             
