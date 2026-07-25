@@ -1,65 +1,65 @@
 import java.util.*;
 
 class Solution {
+    char[][] oper = {
+        {'*', '+', '-'},
+        {'*', '-', '+'},
+        {'+', '-', '*'},
+        {'+', '*', '-'},
+        {'-', '*', '+'},
+        {'-', '+', '*'}
+    };
+
     public long solution(String expression) {
         long answer = 0;
-        char[][] orders={
-            {'+','-','*'},
-            {'+','*','-'},
-            {'-','+','*'},
-            {'-','*','+'},
-            {'*','-','+'},
-            {'*','+','-'}
-        };
-        
-        List<Long> nums=new ArrayList<>();
-        List<Character> ops=new ArrayList<>();
-        
-        StringBuilder sb= new StringBuilder();
-        
-        //숫자, 연산자 분리
-        for(int i=0;i<expression.length();i++){
-            char c= expression.charAt(i);
-            
-            if(c=='-'||c=='+'||c=='*'){
-                nums.add(Long.parseLong(sb.toString()));                       sb.setLength(0);
-                ops.add(c);
-            } else sb.append(c);
+
+        StringBuilder sb = new StringBuilder();
+        List<Long> num = new ArrayList<>();
+        List<Character> operation = new ArrayList<>();
+
+        for (char c : expression.toCharArray()) {
+            if (c == '*' || c == '+' || c == '-') {
+                num.add(Long.parseLong(sb.toString()));
+                sb.setLength(0);
+                operation.add(c);
+            } else {
+                sb.append(c);
+            }
         }
-        
-        nums.add(Long.parseLong(sb.toString()));
-        
-        //모든 우선순위대로 계산
-        for(char[] order : orders){
-            List<Long> tmpNums=new ArrayList<>(nums);
-            List<Character> tmpOps=new ArrayList<>(ops);
-            
-            for(char op : order){
-                for(int i=0;i<tmpOps.size();i++){
-                    if(tmpOps.get(i)==op){
-                        long a=tmpNums.get(i);
-                        long b=tmpNums.get(i+1);
-                        long result=calculate(a,b,op);
-                        
-                        tmpNums.remove(i);
-                        tmpNums.remove(i);
-                        tmpNums.add(i,result);
-                        
-                        tmpOps.remove(i);
-                        i--;
-                        
+
+        // 마지막 숫자 추가
+        num.add(Long.parseLong(sb.toString()));
+
+        for (char[] priority : oper) {
+            // 우선순위마다 새로운 리스트로 계산
+            List<Long> nums = new ArrayList<>(num);
+            List<Character> ops = new ArrayList<>(operation);
+
+            for (char op : priority) {
+                while (ops.contains(op)) {
+                    int idx = ops.indexOf(op);
+
+                    long n1 = nums.get(idx);
+                    long n2 = nums.get(idx + 1);
+                    long result;
+
+                    if (op == '*') {
+                        result = n1 * n2;
+                    } else if (op == '-') {
+                        result = n1 - n2;
+                    } else {
+                        result = n1 + n2;
                     }
+
+                    nums.set(idx, result);
+                    nums.remove(idx + 1);
+                    ops.remove(idx);
                 }
             }
-            answer=Math.max(answer, Math.abs(tmpNums.get(0)));
+
+            answer = Math.max(answer, Math.abs(nums.get(0)));
         }
-        
-        
+
         return answer;
-    }
-    long calculate(long a, long b, char op){
-        if(op=='-') return a-b;
-        else if(op=='+') return a+b;
-        else return a*b;
     }
 }
