@@ -2,50 +2,63 @@ import java.util.*;
 
 class Solution {
     public String solution(String p) {
-        return convert(p);
-    }
-
-    private String convert(String p) {
+        // 1. 빈 문자열이면 빈 문자열 반환
         if (p.isEmpty()) return "";
 
-        // 1. u, v 분리
-        int balance = 0;
+        // 2. 문자열을 균형잡힌 괄호 문자열 u, v로 분리
+        int sum = 0;
         int idx = 0;
-        do {
-            if (p.charAt(idx) == '(') balance++;
-            else balance--;
-            idx++;
-        } while (balance != 0);
 
-        String u = p.substring(0, idx);
-        String v = p.substring(idx);
+        for (int i = 0; i < p.length(); i++) {
+            if (p.charAt(i) == '(') sum++;
+            else sum--;
 
-        // 2. u가 올바른 괄호 문자열인지 확인
-        if (isCorrect(u)) {
-            return u + convert(v);
+            if (sum == 0) {
+                idx = i;
+                break;
+            }
         }
 
-        // 3. 올바르지 않은 경우
-        StringBuilder sb = new StringBuilder();
-        sb.append("(");
-        sb.append(convert(v));
-        sb.append(")");
+        String u = p.substring(0, idx + 1);
+        String v = p.substring(idx + 1);
 
-        // u의 첫/마지막 제거 후 괄호 뒤집기
+        // 3. u가 올바른 괄호 문자열인 경우
+        if (isCorrect(u)) {
+            return u + solution(v);
+        }
+
+        // 4. u가 올바른 괄호 문자열이 아닌 경우
+        StringBuilder sb = new StringBuilder();
+
+        sb.append('(');
+        sb.append(solution(v));
+        sb.append(')');
+
+        // u의 첫 번째와 마지막 문자 제거 후 괄호 방향 뒤집기
         for (int i = 1; i < u.length() - 1; i++) {
-            sb.append(u.charAt(i) == '(' ? ')' : '(');
+            if (u.charAt(i) == '(') {
+                sb.append(')');
+            } else {
+                sb.append('(');
+            }
         }
 
         return sb.toString();
     }
 
-    private boolean isCorrect(String s) {
-        int cnt = 0;
+    boolean isCorrect(String s) {
+        int count = 0;
+
         for (char c : s.toCharArray()) {
-            if (c == '(') cnt++;
-            else cnt--;
-            if (cnt < 0) return false;
+            if (c == '(') {
+                count++;
+            } else {
+                count--;
+
+                if (count < 0) return false;
+            }
         }
-        return cnt == 0;
+
+        return count == 0;
     }
 }
