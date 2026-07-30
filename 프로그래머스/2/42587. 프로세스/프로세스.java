@@ -1,34 +1,33 @@
 import java.util.*;
 
 class Solution {
-    public int solution(int[] priorities, int location) {
-        Queue<int[]> q=new LinkedList<>();
-        int[] freq=new int[10];
-        for(int i=0;i<priorities.length;i++){
-            q.offer(new int[]{i,priorities[i]});
-            freq[priorities[i]]++;
-        }
-        int cnt = 0;
-        int max= 9;
+    class Process{
+        int priority;
+        int loc;
         
-        while(max>0 && freq[max]==0) max--;
-        
-        
-    while(!q.isEmpty()){
-        int[] cur=q.peek();
-        int p=cur[1];
-        
-        if(p<max){
-            q.offer(q.poll());
-        } else{
-            q.poll();
-            cnt++;
-            freq[p]--;
-            
-            if(cur[0]==location) return cnt;
-            while(max>0 && freq[max]==0) max--;
+        Process(int priority, int loc){
+            this.priority=priority;
+            this.loc=loc;
         }
     }
-        return cnt;
+    public int solution(int[] priorities, int location) {
+        int answer = 0;
+        Queue<Process> q=new LinkedList<>();
+        int idx=0;
+        for(int p : priorities) q.offer(new Process(p,idx++));
+        
+        int order=1;
+        while(!q.isEmpty()){
+            Process cur=q.poll();
+            //우선순위가 더 높은게 있으면
+            if(q.stream().anyMatch(p -> p.priority > cur.priority)){
+                q.offer(cur);
+            } else{
+                if(cur.loc==location) return order; //찾는위치면 바로 return
+                order++;
+            }
+            
+        }
+        return answer;
     }
 }
