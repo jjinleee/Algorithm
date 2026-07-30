@@ -1,23 +1,34 @@
+import java.util.*;
+
 class Solution {
     public int solution(int[] players, int m, int k) {
-        int[] s=new int[24];
-        int cur=0;
         int answer = 0;
-        
-        for(int i=0;i<24;i++){
-            //서버 종료
-            if(i-k>=0){
-                cur-=s[i-k];
-            } 
-            int need=players[i]/m;
-            
-            if(cur<need){
-                int add=need-cur;
-                cur+=add;
-                answer+=add;
-                s[i]=add;
+
+        // 증설 서버들의 종료 시간
+        Queue<Integer> server = new ArrayDeque<>();
+
+        for (int time = 0; time < players.length; time++) {
+
+            // 현재 시간에 운영이 종료된 서버 제거
+            while (!server.isEmpty() && server.peek() <= time) {
+                server.poll();
+            }
+
+            // 현재 이용자 수를 처리하기 위해 필요한 증설 서버 수
+            int required = players[time] / m;
+
+            // 현재 운영 중인 서버보다 더 필요한 경우 증설
+            if (required > server.size()) {
+                int add = required - server.size();
+
+                for (int i = 0; i < add; i++) {
+                    server.offer(time + k);
+                }
+
+                answer += add;
             }
         }
+
         return answer;
     }
 }
