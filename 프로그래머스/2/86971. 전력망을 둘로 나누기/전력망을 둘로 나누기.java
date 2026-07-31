@@ -1,40 +1,35 @@
 import java.util.*;
 
 class Solution {
+    
     public int solution(int n, int[][] wires) {
-        int answer = n;
+        int answer = Integer.MAX_VALUE;
         
-        for(int i=0;i<wires.length;i++){
+        int cnt=wires.length;
+        for(int i=0;i<cnt;i++){
             List<List<Integer>> graph=new ArrayList<>();
             for(int j=0;j<=n;j++) graph.add(new ArrayList<>());
-            
-            boolean[] visited=new boolean[n+1];
-            for(int j=0;j<wires.length;j++){
+            for(int j=0;j<cnt;j++){
                 if(i==j) continue;
                 graph.get(wires[j][0]).add(wires[j][1]);
                 graph.get(wires[j][1]).add(wires[j][0]);
             }
+            boolean[] visited= new boolean[n+1];
+            int num=dfs(graph,visited, 1);
+            int sub=Math.abs(2*num-n);
             
-            int cnt=bfs(1,visited, graph);
-            answer=Math.min(Math.abs(2*cnt-n),answer);
+            answer=Math.min(answer, sub);
         }
+        
         return answer;
     }
-    int bfs(int start, boolean[] visited, List<List<Integer>> graph){
+    int dfs(List<List<Integer>> graph, boolean[] visited, int node){
         int cnt=1;
+        visited[node]=true;
         
-        visited[start]=true;
-        Queue<Integer> q=new LinkedList<>();
-        q.offer(start);
-        
-        while(!q.isEmpty()){
-            int cur=q.poll();
-            for(int next : graph.get(cur)){
-                if(!visited[next]){
-                    visited[next]=true;
-                    q.offer(next);
-                    cnt++;
-                }
+        for(int next: graph.get(node)){
+            if(!visited[next]){
+                cnt+=dfs(graph, visited, next);
             }
         }
         
