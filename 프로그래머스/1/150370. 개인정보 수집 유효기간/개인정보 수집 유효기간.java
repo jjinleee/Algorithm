@@ -2,35 +2,37 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String today, String[] terms, String[] privacies) {
-        List<Integer> list=new ArrayList<>();
-        Map<Character, Integer> term=new HashMap<>(); //약관종류별 유효개월
+        int todayReal=trans(today);
+        
+        //약관 유효기간 저장
+        Map<Character, Integer> limit=new HashMap<>();
         for(String t : terms){
             String[] tmp=t.split(" ");
-            term.put(tmp[0].charAt(0), Integer.parseInt(tmp[1]));
+            limit.put(tmp[0].charAt(0), Integer.parseInt(tmp[1]));
         }
         
-        int now=todays(today); //오늘날짜
-    
-        for(int i=0;i<privacies.length;i++){
-            int date=todays(privacies[i].split(" ")[0]); //가입일
-            char c= privacies[i].split(" ")[1].charAt(0); //약관종류
-            int m= term.get(c); //유효개월
-            
-            
-            if(now-date>= 28*m) list.add(i+1);
+        //번호별 파기일 저장
+        Map<Integer, Integer> num=new HashMap<>();
+        for(int i=1;i<=privacies.length;i++){
+            String[] tmp=privacies[i-1].split(" ");
+            int day=trans(tmp[0]);
+            char type=tmp[1].charAt(0);
+            num.put(i, day+limit.get(type)*28);
         }
         
-        
+        List<Integer> list=new ArrayList<>();
+        for(int i : num.keySet()){
+            if(num.get(i)<=todayReal) list.add(i);
+        }
         
         return list.stream().mapToInt(i->i).toArray();
     }
-    
-    int todays(String s){
-        String[] tmp=s.split("\\.");
+    int trans(String day){
+        String[] tmp=day.split("\\.");
         int y=Integer.parseInt(tmp[0]);
         int m=Integer.parseInt(tmp[1]);
         int d=Integer.parseInt(tmp[2]);
         
-        return 28*12*y+28*m+d;
+        return 12*28*y+28*m+d;
     }
 }
