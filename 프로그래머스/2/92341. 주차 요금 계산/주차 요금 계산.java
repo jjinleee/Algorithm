@@ -1,71 +1,55 @@
 import java.util.*;
 
-
 class Solution {
     public int[] solution(int[] fees, String[] records) {
-        int n=records.length;
         int basicTime=fees[0];
-        int basic=fees[1];
-        int per=fees[2];
-        int perFee=fees[3];
+        int basicFee=fees[1];
+        int plusTime=fees[2];
+        int plusFee=fees[3];
         
-        Map<Integer,Integer> totalTime=new HashMap<>(); //차번호, 누적시간 
-        Map<Integer,Integer> inTime=new HashMap<>(); //차번호, 입차시간 
-            
-        //차량별 누저시간 계산
+        Map<Integer, Integer> startTime=new HashMap<>(); //차량입차시간
+        Map<Integer, Integer> total=new HashMap<>(); //차량별 누적시간
         for(String r : records){
             String[] tmp=r.split(" ");
-            int time=toMin(tmp[0]);
-            int num=Integer.parseInt(tmp[1]);
-            String exist= tmp[2];
+            int time=Integer.parseInt(tmp[0].split(":")[0])*60+ Integer.parseInt(tmp[0].split(":")[1]);
+            int car=Integer.parseInt(tmp[1]);
+            String cmd=tmp[2];
             
-            if(exist.equals("IN")){ //입차
-                inTime.put(num, time);
-            } else { //출차
-                int use=time-inTime.get(num); //이용시간계산
-                totalTime.put(num, totalTime.getOrDefault(num,0)+use);
-                inTime.remove(num); //입차기록 삭제
-            }
-        }
-    
-        //출차기록 없는 차 처리
-        if(!inTime.isEmpty()){
-            for(int car : inTime.keySet()){
-                int in=inTime.get(car);
-                int use=23*60+59-in;
-                totalTime.put(car, totalTime.getOrDefault(car, 0)+use );
+            if(cmd.equals("IN")){
+                startTime.put(car, time);
+            } else {
+                int start=startTime.get(car);
+                int during=time-start;
+                total.put(car, total.getOrDefault(car,0)+during); //누적
+                startTime.remove(car);
             }
         }
         
-        Map<Integer, Integer> totalMoney=new HashMap<>();//차량별 총 요금
-        
-        //요금계산
-        for(int car : totalTime.keySet()){
-            int money=basic;
-            int used=totalTime.get(car);
-            
-            //기본시간 초과
-            if(used>basicTime){
-                int extra=used-basicTime;
-                money+=(int)Math.ceil((double)extra/per) *perFee; //올림
+        //출차내역없는 차 처리
+        if(!startTime.isEmpty()){
+            for(int car : startTime.keySet()){
+                int during=23*60+59-startTime.get(car);
+                total.put(car, total.getOrDefault(car,0)+during);
             }
-            totalMoney.put(car, money);
         }
         
-        //차량번호 오름차순으로 요금 리턴
-        List<Integer> sorted=new ArrayList<>(totalMoney.keySet());
-        Collections.sort(sorted);
+        //차량 번호 작은 차부터
+        List<Integer> list=new ArrayList<>(total.keySet());
+        list.sort(Comparator.naturalOrder());
+        
+        int[] answer=new int[list.size()];
         int idx=0;
-        int[] answer=new int[sorted.size()];
-        for(int s : sorted) answer[idx++]=totalMoney.get(s);
-        
+        for(int l : list){
+            int totalTime=total.get(l);
+            int money=basicFee;
+            if(totalTime>basicTime){
+                float plus=totalTime-basicTime;
+                int plusmoney=(int)Math.ceil(plus/plusTime)*plusFee;
+                money+=plusmoney;
+            }
+            answer[idx++]=money;
+        }
         
         return answer;
-    }
-    int toMin(String s){
-        int h=Integer.parseInt(s.split(":")[0]);
-        int m=Integer.parseInt(s.split(":")[1]);
-        
-        return 60*h+m;
     }
 }
