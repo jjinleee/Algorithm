@@ -2,18 +2,17 @@ import java.util.*;
 
 class Solution {
     boolean solution(String s) {
-        Stack<Character> q=new Stack<>();
+        boolean answer = true;
+        Stack<Character> stack=new Stack<>();
         for(char c : s.toCharArray()){
-            if(q.isEmpty()) q.push(c);
+            if(c=='(') stack.push(c);
             else{
-                if(c=='(') q.push(c);
-                else{
-                    if(q.isEmpty()) return false;
-                    q.pop();
-                }
+                if(stack.isEmpty()) return false;
+                stack.pop();
             }
         }
         
-        return q.isEmpty() ? true: false;
+
+        return stack.isEmpty() ? true : false;
     }
 }
