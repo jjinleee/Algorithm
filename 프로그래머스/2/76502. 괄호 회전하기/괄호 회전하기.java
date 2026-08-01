@@ -1,35 +1,33 @@
 import java.util.*;
 
 class Solution {
-    public int solution(String s) {        
+    public int solution(String s) {
+        int answer=0;
+        Queue<Character> q=new LinkedList<>();
+        for(char c : s.toCharArray()) q.offer(c);
         int n=s.length();
-        int cnt=0;
         
-        for(int i=0;i<n;i++){
-            if(isValid(s)) cnt++;
-            s=rotateLeft(s);
+        if(isCorrect(q)) answer++;
+        
+        for(int i=0;i<n-1;i++){
+            q.offer(q.poll());
+            if(isCorrect(q)) answer++;
         }
-        
-        return cnt;
+        return answer;
     }
-    
-    public boolean isValid(String s){
-        Stack<Character> stack= new Stack<>();
-        for(char c: s.toCharArray()){
-            if(c=='(' || c=='{' || c=='['){
-                stack.push(c);
-            } else{
-                if(stack.isEmpty()) return false;
-                
-                char top=stack.pop();
-                if((c==')' && top!='(') ||
-                  (c==']' && top!='[') ||
-                  (c=='}' && top!='{')) return false;
+    boolean isCorrect(Queue<Character> q){
+        Stack<Character> stack=new Stack<>();
+        for(char c : q){
+            if(c=='['||c=='{'||c=='(') stack.push(c);
+            else{
+                if(stack.isEmpty())  return false;
+                if(stack.peek()=='(' && c!=')') return false;
+                if(stack.peek()=='{' && c!='}') return false;
+                if(stack.peek()=='[' && c!=']') return false;  
+                stack.pop();
             }
         }
-        return stack.isEmpty();
-    }
-    public String rotateLeft(String s){
-        return s.substring(1)+s.charAt(0);
+        
+        return stack.isEmpty() ? true : false;
     }
 }
