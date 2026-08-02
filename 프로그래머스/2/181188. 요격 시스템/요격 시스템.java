@@ -2,16 +2,22 @@ import java.util.*;
 
 class Solution {
     public int solution(int[][] targets) {
+        Arrays.sort(targets, (a, b) -> Integer.compare(a[1], b[1]));
+
         int answer = 0;
-        Arrays.sort(targets,(a,b)->a[1]-b[1]);
-        int point=-1;
-        for(int[] t : targets){
-            if(t[0]>=point){
+        int intercept = -1;
+
+        for (int[] target : targets) {
+            int start = target[0];
+            int end = target[1];
+
+            // 기존 요격 지점으로 처리할 수 없는 경우
+            if (start >= intercept) {
                 answer++;
-                point=t[1];
+                intercept = end;
             }
         }
-        
+
         return answer;
     }
 }
