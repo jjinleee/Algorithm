@@ -3,37 +3,36 @@ import java.util.*;
 class Solution {
     public int solution(int x, int y, int n) {
         int answer = 0;
+        Queue<int[]> q=new LinkedList<>();
         boolean[] visited=new boolean[y+1];
-        Queue<Integer> q= new LinkedList<>();
-        q.offer(x);
-        visited[x]=true;
         
+        q.offer(new int[]{x,0});
+        visited[x]=true;
         while(!q.isEmpty()){
-            int size=q.size();
+            int[] cur=q.poll();
+            int num=cur[0];
+            int cnt=cur[1];
             
-            for(int i=0;i<size;i++){
-                int cur=q.poll();
-                if(cur==y) return answer;
-                
-                int n1=cur+n;
-                int n2=cur*2;
-                int n3=cur*3;
-                
-                if(n1<=y && !visited[n1]){
-                    visited[n1]=true;
-                    q.offer(n1);
-                }
-                if(n2<=y && !visited[n2]){
-                    visited[n2]=true;
-                    q.offer(n2);
-                }
-                if(n3<=y && !visited[n3]){
-                    visited[n3]=true;
-                    q.offer(n3);
-                }
+            if(num==y) return cnt;
+            
+            int c1=num+n;
+            int c2=num*2;
+            int c3=num*3;
+            
+            if(c1<=y && !visited[c1]){
+                q.offer(new int[]{c1,cnt+1});
+                visited[c1]=true;
             }
-            answer++;
-        }
+            if(c2<=y && !visited[c2]){
+                q.offer(new int[]{c2,cnt+1});
+                visited[c2]=true;
+            }
+            if(c3<=y && !visited[c3]){
+                q.offer(new int[]{c3,cnt+1});
+                visited[c3]=true;
+            }
+        }   
+            
         return -1;
     }
 }
