@@ -1,58 +1,65 @@
 import java.util.*;
 
 class Solution {
-    int[] start={0,0};
-    int[] rever={0,0};
-    int[] exit={0,0};
-    char[][] map;
-    int n,m;
     int[] dx={-1,1,0,0};
     int[] dy={0,0,-1,1};
+    int n,m;
+    int sx,sy,lx,ly,ex,ey;
+    char[][] map;
     public int solution(String[] maps) {
-        int answer = 0;
+        int sum = 0;
         n=maps.length;
         m=maps[0].length();
         map=new char[n][m];
-        
         for(int i=0;i<n;i++){
             for(int j=0;j<m;j++){
                 map[i][j]=maps[i].charAt(j);
-                //각 위치 저장
-                if(map[i][j]=='S') start=new int[]{i,j};
-                if(map[i][j]=='L') rever=new int[]{i,j};
-                if(map[i][j]=='E') exit=new int[]{i,j};
+                if(map[i][j]=='S'){
+                    sx=i; sy=j;
+                } else if(map[i][j]=='E'){
+                    ex=i; ey=j;
+                } else if(map[i][j]=='L'){
+                    lx=i; ly=j;
+                }
             }
         }
-        //출발->레버
-        int startToLever=bfs(start[0],start[1], rever[0],rever[1]);
-        int LeverToExit=bfs(rever[0],rever[1],exit[0],exit[1]);
         
+        int toLever=bfs(sx,sy,lx,ly);
+        if(toLever==-1) return -1;
         
-        return (startToLever==-1 || LeverToExit==-1) ? -1 : (startToLever+LeverToExit);
+        int toExit=bfs(lx,ly,ex,ey);
+        if(toExit==-1) return -1;
+        
+        return toLever+toExit;
     }
-    int bfs(int startx, int starty, int targetx, int targety){
-        if(startx==targetx && starty==targety) return 0;
+    int bfs(int sx, int sy, int ex, int ey){
+        int sum=0;
         
         boolean[][] visited=new boolean[n][m];
         Queue<int[]> q= new LinkedList<>();
-        q.add(new int[]{startx,starty,0});
-        visited[startx][starty]=true;
+        q.offer(new int[]{sx,sy,0});
+        visited[sx][sy]=true;
         
         while(!q.isEmpty()){
             int[] cur=q.poll();
-            int x=cur[0],y=cur[1],dist=cur[2];
+            int cx=cur[0];
+            int cy=cur[1];
+            int distance=cur[2];
+            
+            if(cx==ex && cy==ey){
+                return distance;
+            }
             
             for(int i=0;i<4;i++){
-                int nx=cur[0]+dx[i];
-                int ny=cur[1]+dy[i];
+                int nx=cx+dx[i];
+                int ny=cy+dy[i];
                 
-                if(nx>=0 && nx<n && ny>=0 && ny<m &&map[nx][ny]!='X' &&!visited[nx][ny]){
-                    if(nx==targetx && ny==targety) return dist+1;
+                if(nx>=0 && nx<n && ny>=0 && ny<m && !visited[nx][ny] && map[nx][ny]!='X'){
                     visited[nx][ny]=true;
-                    q.offer(new int[]{nx,ny,dist+1});
+                    q.offer(new int[]{nx,ny,distance+1});
                 }
             }
-        } 
+        }
         
         return -1;
     }
