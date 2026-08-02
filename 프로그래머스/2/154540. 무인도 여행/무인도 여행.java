@@ -1,56 +1,48 @@
 import java.util.*;
 
 class Solution {
-    int[] dx = {-1, 1, 0, 0};
-    int[] dy = {0, 0, -1, 1};
-
-    int n, m;
+    int[] dx={-1,1,0,0};
+    int[] dy={0,0,-1,1};
     char[][] map;
-    boolean[][] visited;
-
+    int n,m;
+    List<Integer> list=new ArrayList<>();
     public int[] solution(String[] maps) {
-        n = maps.length;
-        m = maps[0].length();             
-        map = new char[n][m];
-        visited = new boolean[n][m];
-
-        for (int i = 0; i < n; i++) {
-            map[i] = maps[i].toCharArray();
+        n=maps.length;
+        m=maps[0].length();
+        
+        int idx=0;
+        map=new char[n][m];
+        for(String m : maps){
+            map[idx++]=m.toCharArray();
         }
-
-        List<Integer> list = new ArrayList<>();
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (!visited[i][j] && map[i][j] != 'X') {
-                    int sum = dfs(i, j);
-                    list.add(sum);
+        boolean[][] visited=new boolean[n][m];
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(!visited[i][j] && map[i][j]!='X'){
+                    list.add(dfs(visited, i,j));
                 }
             }
         }
-
-        if (list.isEmpty()) return new int[]{-1};
-
-        Collections.sort(list);
-        int[] answer = new int[list.size()];
-        for (int i = 0; i < list.size(); i++) answer[i] = list.get(i);
-
-        return answer;
+        list.sort(Comparator.naturalOrder());
+        if(list.isEmpty()) return new int[]{-1};
+        
+        return list.stream().mapToInt(i->i).toArray();
     }
-
-    int dfs(int x, int y) {
-        visited[x][y] = true;
-        int sum = map[x][y] - '0';   
-
-        for (int dir = 0; dir < 4; dir++) {
-            int nx = x + dx[dir];
-            int ny = y + dy[dir];    
-
-            if (nx >= 0 && nx < n && ny >= 0 && ny < m
-                    && !visited[nx][ny] && map[nx][ny] != 'X') {
-                sum += dfs(nx, ny);
+    int dfs(boolean[][] visited, int x, int y){        
+        visited[x][y]=true;
+        
+        int sum=map[x][y]-'0';
+        
+        for(int i=0;i<4;i++){
+            int nx=x+dx[i];
+            int ny=y+dy[i];
+            
+            if(nx>=0 && nx<n && ny>=0 && ny<m && !visited[nx][ny] && map[nx][ny]!='X'){
+                visited[nx][ny]=true;
+                sum+=dfs(visited, nx, ny);
             }
         }
+        
         return sum;
     }
 }
