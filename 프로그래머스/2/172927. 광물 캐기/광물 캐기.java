@@ -2,47 +2,67 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] picks, String[] minerals) {
-        int[][] cost = { // [곡괭이][광물] 피로도
-            {1, 1, 1},    // 다이아
-            {5, 1, 1},    // 철
-            {25, 5, 1}    // 돌
-        };
-
         int totalPicks = picks[0] + picks[1] + picks[2];
-        int len = Math.min(minerals.length, totalPicks * 5);
+        int maxMinerals = Math.min(minerals.length, totalPicks * 5);
 
-        // 5개씩 끊어서 [다이아, 철, 돌] 개수 저장
         List<int[]> groups = new ArrayList<>();
-        for (int i = 0; i < len; i++) {
-            if (i % 5 == 0) groups.add(new int[3]);
-            int[] g = groups.get(groups.size() - 1);
 
-            char c = minerals[i].charAt(0);
-            if (c == 'd') g[0]++;       // diamond
-            else if (c == 'i') g[1]++;  // iron
-            else g[2]++;                // stone
+        // 광물을 5개씩 묶어서 다이아, 철, 돌 개수 저장
+        for (int i = 0; i < maxMinerals; i += 5) {
+            int diamond = 0;
+            int iron = 0;
+            int stone = 0;
+
+            for (int j = i; j < i + 5 && j < maxMinerals; j++) {
+                if (minerals[j].equals("diamond")) {
+                    diamond++;
+                } else if (minerals[j].equals("iron")) {
+                    iron++;
+                } else {
+                    stone++;
+                }
+            }
+
+            groups.add(new int[]{diamond, iron, stone});
         }
 
-        // 돌 곡괭이로 캤을 때 피로도(25,5,1) 기준 내림차순 정렬
-        groups.sort((a, b) ->
-            (b[0] * 25 + b[1] * 5 + b[2]) -
-            (a[0] * 25 + a[1] * 5 + a[2])
-        );
+        // 돌 곡괭이로 캤을 때 피로도가 큰 묶음부터 정렬
+        groups.sort((a, b) -> {
+            int fatigueA = a[0] * 25 + a[1] * 5 + a[2];
+            int fatigueB = b[0] * 25 + b[1] * 5 + b[2];
 
-        int ans = 0;
-        int idx = 0;
+            return Integer.compare(fatigueB, fatigueA);
+        });
 
-        // 다이아(0) → 철(1) → 돌(2) 순으로 그룹에 배치
-        for (int t = 0; t < 3; t++) {
-            while (picks[t] > 0 && idx < groups.size()) {
-                int[] g = groups.get(idx++);
-                ans += g[0] * cost[t][0]
-                     + g[1] * cost[t][1]
-                     + g[2] * cost[t][2];
-                picks[t]--;
+        int answer = 0;
+
+        for (int[] group : groups) {
+            int pick;
+
+            if (picks[0] > 0) {
+                pick = 0;
+                picks[0]--;
+            } else if (picks[1] > 0) {
+                pick = 1;
+                picks[1]--;
+            } else {
+                pick = 2;
+                picks[2]--;
+            }
+
+            int diamond = group[0];
+            int iron = group[1];
+            int stone = group[2];
+
+            if (pick == 0) {
+                answer += diamond + iron + stone;
+            } else if (pick == 1) {
+                answer += diamond * 5 + iron + stone;
+            } else {
+                answer += diamond * 25 + iron * 5 + stone;
             }
         }
 
-        return ans;
+        return answer;
     }
 }
