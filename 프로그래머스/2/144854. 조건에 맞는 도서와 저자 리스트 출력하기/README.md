@@ -1,6 +1,6 @@
 # [level 2] 조건에 맞는 도서와 저자 리스트 출력하기 - 144854 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/144854?language=oracle) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/144854?language=mysql) 
 
 ### 성능 요약
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2026년 05월 15일 16:00:04
+2026년 08월 03일 15:46:27
 
 ### 문제 설명
 
