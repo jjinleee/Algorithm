@@ -2,64 +2,61 @@ import java.util.*;
 
 class Solution {
     public int solution(int m, int n, String[] board) {
-        int answer = 0;
         char[][] map=new char[m][n];
         int idx=0;
-        for(String b : board) map[idx++]=b.toCharArray();
+        for(String b: board){
+            map[idx++]=b.toCharArray();
+        }
         
-        boolean[][] del=new boolean[m][n];
+        int answer=0;
+        
         while(true){
-            del=new boolean[m][n];
-            boolean keep=false;
+            boolean delete=false;
+            boolean[][] bomb=new boolean[m][n];
+            
             for(int i=0;i<m-1;i++){
                 for(int j=0;j<n-1;j++){
-                    
                     if(map[i][j]=='X') continue;
-                    
-                    if(map[i][j]==map[i][j+1]){
-                        if(map[i][j]==map[i+1][j] && map[i][j]==map[i+1][j+1]){
-                            del[i][j]=true;
-                            del[i+1][j]=true;
-                            del[i][j+1]=true;
-                            del[i+1][j+1]=true;
-                            keep=true;
-                        }
+                    if(map[i][j]==map[i][j+1] && map[i][j]==map[i+1][j] && map[i][j]==map[i+1][j+1]){ //2x2찾음
+                        delete=true;
+                        
+                        bomb[i][j]=true;
+                        bomb[i][j+1]=true;
+                        bomb[i+1][j]=true;
+                        bomb[i+1][j+1]=true;                        
                     }
                 }
             }
             
-            if(!keep) break; //더삭제할거없음
-            
-            //블록삭제
+            //한번에 터뜨림
             for(int i=0;i<m;i++){
                 for(int j=0;j<n;j++){
-                    if(del[i][j]){
-                        map[i][j]='X';
+                    if(bomb[i][j]){
                         answer++;
+                        map[i][j]='X';
+                    }
+                }
+            }            
+            
+            //블록 재정렬
+            for(int col=0;col<n;col++){
+                int write=m-1;
+                for(int row=m-1;row>=0;row--){
+                    if(map[row][col]!='X'){
+                        if(write!=row){
+                            map[write][col]=map[row][col];
+                            map[row][col]='X';
+                        }
+                        write--;
                     }
                 }
             }
             
-            //블록아래로 내림
-            for(int j=0;j<n;j++){
-                List<Character> list=new ArrayList<>();
-                for(int i=m-1;i>=0;i--){
-                    if(map[i][j]!='X') list.add(map[i][j]);
-                }
-                int row=m-1;
-                for(char l : list){
-                    map[row][j]=l;
-                    row--;
-                }
-                
-                
-                while(row>=0){
-                    map[row][j]='X';
-                    row--;
-                }
-            }
-            
+            if(!delete) break;
         }
+        
+        
+        
         return answer;
     }
 }
