@@ -1,42 +1,52 @@
 import java.util.*;
 
 class Solution {
+    char[][] map;
     public int solution(String[] board) {
-        int f = 0;
-        int s = 0;
+        int o=0;
+        int x=0;
         
-        boolean firstWin=isFinish(board, 'O');
-        boolean secondWin=isFinish(board,'X');
-        
-        //순서 오류-> O-X=1 or 0
-        for(String b : board){
-            for(char c : b.toCharArray()){
-                //각 개수 세기
-                if(c=='O') f++;
-                else if(c=='X') s++;
+        map=new char[3][3];
+
+        for(int i=0;i<3;i++){
+            for(int j=0;j<3;j++){
+                char tmp=board[i].charAt(j);
+                if(tmp=='O') o++;
+                else if(tmp=='X') x++;
+                map[i][j]=tmp;
             }
         }
-        //개수비교
-        if(f-s!=0 && f-s!=1) return 0;
-        if(f==s && firstWin) return 0;//선공 승리후에도 진행
-        if(f-s==1 && secondWin) return 0; //후공 승리후에도 진행 
+        //개수 틀림
+        if(o<x) return 0;
+        if(o>x+1) return 0;
+        
+        boolean owin=win('O');
+        boolean xwin=win('X');
+        
+        //이미 승패났는데 진행
+        if(owin && xwin) return 0;
+        if(owin && o!=x+1) return 0;
+        if(xwin && o!=x) return 0;
         
         return 1;
+        
     }
-    boolean isFinish(String[] board, char mark){
-        //가로체크
+    boolean win(char c){ 
+        //좌우대각선
         for(int i=0;i<3;i++){
-            String s=board[i];
-            if(s.charAt(0)==mark && s.charAt(1)==mark && s.charAt(2)==mark) return true;
+            if(map[i][0]==c && map[i][1]==c && map[i][2]==c) return true;
+            
         }
-        //ㅅㅔ로체크
-        for(int i=0;i<3;i++){
-            if(board[0].charAt(i)==mark && board[1].charAt(i)==mark && board[2].charAt(i)==mark) return true;
+        
+        for(int j=0;j<3;j++){
+            if(map[0][j]==c && map[1][j]==c && map[2][j]==c) return true;
         }
-        //대각선체크
-        if(board[0].charAt(0)==mark && board[1].charAt(1)==mark && board[2].charAt(2)==mark) return true;
-        if(board[0].charAt(2)==mark && board[1].charAt(1)==mark && board[2].charAt(0)==mark) return true;
+        
+        if(map[0][0]==c && map[1][1]==c && map[2][2]==c) return true;
+        
+        if(map[0][2]==c && map[1][1]==c && map[2][0]==c) return true;
         
         return false;
+        
     }
 }
