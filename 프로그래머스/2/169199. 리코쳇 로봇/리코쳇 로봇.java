@@ -19,17 +19,19 @@ class Solution {
                 }
             }
         }
-        boolean[][] visited=new boolean[m][n];
+        int[][] dist=new int[m][n];
+        for(int[] r : dist) Arrays.fill(r,-1);
+        
         Queue<int[]> q= new LinkedList<>();
+        dist[start[0]][start[1]]=0;
         q.offer(new int[]{start[0],start[1],0});
         
         while(!q.isEmpty()){
             int[] cur=q.poll();
             int cx=cur[0];
             int cy=cur[1];
-            int dist=cur[2];
-            
-            if(map[cx][cy]=='G') return dist;
+
+            if(map[cx][cy]=='G') return dist[cx][cy];
             
             for(int i=0;i<4;i++){
                 int nx=cx;
@@ -46,9 +48,9 @@ class Solution {
                     nx=tx;
                     ny=ty;
                 }
-                if(!visited[nx][ny]){
-                    visited[nx][ny]=true;
-                    q.offer(new int[]{nx,ny,dist+1});
+                if(dist[nx][ny]==-1){
+                    dist[nx][ny]=dist[cx][cy]+1;
+                    q.offer(new int[]{nx,ny});
                 }
             }
         }
