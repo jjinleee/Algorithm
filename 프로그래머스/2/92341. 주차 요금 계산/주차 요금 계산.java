@@ -7,49 +7,55 @@ class Solution {
         int plusTime=fees[2];
         int plusFee=fees[3];
         
-        Map<Integer, Integer> startTime=new HashMap<>(); //차량입차시간
-        Map<Integer, Integer> total=new HashMap<>(); //차량별 누적시간
+        Map<Integer, Integer> totalTime=new HashMap<>();
+        Map<Integer, Integer> inCar=new HashMap<>();
+        
         for(String r : records){
             String[] tmp=r.split(" ");
-            int time=Integer.parseInt(tmp[0].split(":")[0])*60+ Integer.parseInt(tmp[0].split(":")[1]);
-            int car=Integer.parseInt(tmp[1]);
-            String cmd=tmp[2];
+            int time=toMin(tmp[0]);
+            int carNum=Integer.parseInt(tmp[1]);
+            String order=tmp[2];
             
-            if(cmd.equals("IN")){
-                startTime.put(car, time);
-            } else {
-                int start=startTime.get(car);
-                int during=time-start;
-                total.put(car, total.getOrDefault(car,0)+during); //누적
-                startTime.remove(car);
+            if(order.equals("IN")){
+                inCar.put(carNum, time);
+            }else{
+                int during=time-inCar.get(carNum); //사용시간
+                totalTime.put(carNum, totalTime.getOrDefault(carNum,0)+during);
+                inCar.remove(carNum);
+            }
+        }
+        //출차내역없는차
+        if(!inCar.isEmpty()){
+            for(int carNum : inCar.keySet()){
+                int during=23*60+59-inCar.get(carNum);
+                totalTime.put(carNum, totalTime.getOrDefault(carNum,0)+during);
             }
         }
         
-        //출차내역없는 차 처리
-        if(!startTime.isEmpty()){
-            for(int car : startTime.keySet()){
-                int during=23*60+59-startTime.get(car);
-                total.put(car, total.getOrDefault(car,0)+during);
-            }
-        }
+        //비용계산
+        List<Integer> car=new ArrayList<>(totalTime.keySet());
+        Collections.sort(car); //오름차순정렬
+        int[] answer=new int[car.size()];
         
-        //차량 번호 작은 차부터
-        List<Integer> list=new ArrayList<>(total.keySet());
-        list.sort(Comparator.naturalOrder());
-        
-        int[] answer=new int[list.size()];
         int idx=0;
-        for(int l : list){
-            int totalTime=total.get(l);
-            int money=basicFee;
-            if(totalTime>basicTime){
-                float plus=totalTime-basicTime;
-                int plusmoney=(int)Math.ceil(plus/plusTime)*plusFee;
-                money+=plusmoney;
-            }
-            answer[idx++]=money;
+        for(int c : car){
+            int usedTime=totalTime.get(c);
+            int pay=basicFee;
+            if(usedTime>basicTime){
+                double remain=usedTime-basicTime;
+                int add=(int)(Math.ceil(remain/plusTime))*plusFee;
+                answer[idx++]=pay+add;
+            } else answer[idx++]=pay;
         }
         
         return answer;
+    }
+    int toMin(String time){
+        String[] tmp=time.split(":");
+        int h=Integer.parseInt(tmp[0])*60;
+        int m=Integer.parseInt(tmp[1]);
+        
+        return h+m;
+        
     }
 }
