@@ -2,58 +2,58 @@ import java.util.*;
 
 class Solution {
     public int solution(String[] board) {
-        int answer = 0;
         int[] dx={-1,1,0,0};
         int[] dy={0,0,-1,1};
+        int n=board.length;
+        int m=board[0].length();
         
-        int[] start=new int[2];
+        int sx=0; 
+        int sy=0;
         
-        int m=board.length;
-        int n=board[0].length();
-        char[][] map=new char[m][n];
-        for(int i=0;i<m;i++){
-            for(int j=0;j<n;j++){
-                map[i][j]=board[i].charAt(j);
-                if(map[i][j]=='R'){
-                    start[0]=i;start[1]=j;
+        char[][] map=new char[n][m];
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                char c=board[i].charAt(j);
+                if(c=='R'){
+                    sx=i;
+                    sy=j;
                 }
+                map[i][j]=c;
             }
         }
-        int[][] dist=new int[m][n];
-        for(int[] r : dist) Arrays.fill(r,-1);
         
-        Queue<int[]> q= new LinkedList<>();
-        dist[start[0]][start[1]]=0;
-        q.offer(new int[]{start[0],start[1],0});
+        boolean[][] visited=new boolean[n][m];
+        Queue<int[]> q=new LinkedList<>();
+        q.offer(new int[]{sx,sy,0});
+        visited[sx][sy]=true;
         
         while(!q.isEmpty()){
             int[] cur=q.poll();
-            int cx=cur[0];
-            int cy=cur[1];
-
-            if(map[cx][cy]=='G') return dist[cx][cy];
+            int dist=cur[2];
+            if(map[cur[0]][cur[1]]=='G') return dist;
             
             for(int i=0;i<4;i++){
-                int nx=cx;
-                int ny=cy;
+                int nx=cur[0];
+                int ny=cur[1];
                 
                 while(true){
                     int tx=nx+dx[i];
                     int ty=ny+dy[i];
                     
-                    if(tx<0 || tx>=m || ty<0 || ty>=n || map[tx][ty]=='D'){
-                       break;
-                    } 
-                    
-                    nx=tx;
-                    ny=ty;
+                    if(tx>=0 && tx<n &&ty>=0 && ty<m && map[tx][ty]!='D'){
+                        nx=tx;
+                        ny=ty;
+                        
+                    } else break;
                 }
-                if(dist[nx][ny]==-1){
-                    dist[nx][ny]=dist[cx][cy]+1;
-                    q.offer(new int[]{nx,ny});
+                
+                if(!visited[nx][ny]){
+                    visited[nx][ny]=true;
+                    q.offer(new int[]{nx,ny,dist+1});
                 }
             }
         }
+        
         return -1;
     }
 }
