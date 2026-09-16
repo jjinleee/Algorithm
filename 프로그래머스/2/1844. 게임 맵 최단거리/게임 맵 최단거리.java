@@ -1,15 +1,16 @@
 import java.util.*;
 
 class Solution {
-    int[] dx={-1,1,0,0};
-    int[] dy={0,0,-1,1};
-    int n,m;
     public int solution(int[][] maps) {
-        m=maps.length;
-        n=maps[0].length;
-        boolean[][] visited=new boolean[m][n];
+        int answer = 0;
+        int[] dx={-1,1,0,0};
+        int[] dy={0,0,-1,1};
         
-        Queue<int[]> q= new LinkedList<>();
+        int n=maps.length;
+        int m=maps[0].length;
+        
+        boolean[][] visited=new boolean[n][m];
+        Queue<int[]> q=new LinkedList<>();
         q.offer(new int[]{0,0});
         visited[0][0]=true;
         
@@ -18,11 +19,13 @@ class Solution {
             int x=cur[0];
             int y=cur[1];
             
+            if(x==n-1 && y==m-1) return maps[n-1][m-1];
+            
             for(int i=0;i<4;i++){
                 int nx=x+dx[i];
                 int ny=y+dy[i];
                 
-                if(nx>=0 && nx<m && ny>=0 && ny<n && maps[nx][ny]==1 &&!visited[nx][ny]){
+                if(nx>=0 && nx<n && ny>=0 && ny<m && !visited[nx][ny] && maps[nx][ny]==1){
                     visited[nx][ny]=true;
                     q.offer(new int[]{nx,ny});
                     maps[nx][ny]+=maps[x][y];
@@ -30,6 +33,6 @@ class Solution {
             }
         }
         
-        return maps[m-1][n-1]==1 ? -1 : maps[m-1][n-1];
+        return maps[n-1][m-1]==1 ? -1 : maps[n-1][m-1];
     }
 }
