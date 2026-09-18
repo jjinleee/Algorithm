@@ -1,10 +1,10 @@
 # [level 2] 전력망을 둘로 나누기 - 86971 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/86971) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/86971?utm_source=chatgpt.com) 
 
 ### 성능 요약
 
-메모리: 83 MB, 시간: 7.97 ms
+메모리: 83.5 MB, 시간: 6.48 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2026년 07월 31일 16:20:35
+2026년 09월 18일 22:29:37
 
 ### 문제 설명
 
