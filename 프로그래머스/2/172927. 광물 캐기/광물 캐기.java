@@ -2,67 +2,42 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] picks, String[] minerals) {
-        int totalPicks = picks[0] + picks[1] + picks[2];
-        int maxMinerals = Math.min(minerals.length, totalPicks * 5);
-
-        List<int[]> groups = new ArrayList<>();
-
-        // 광물을 5개씩 묶어서 다이아, 철, 돌 개수 저장
-        for (int i = 0; i < maxMinerals; i += 5) {
-            int diamond = 0;
-            int iron = 0;
-            int stone = 0;
-
-            for (int j = i; j < i + 5 && j < maxMinerals; j++) {
-                if (minerals[j].equals("diamond")) {
-                    diamond++;
-                } else if (minerals[j].equals("iron")) {
-                    iron++;
-                } else {
-                    stone++;
-                }
-            }
-
-            groups.add(new int[]{diamond, iron, stone});
-        }
-
-        // 돌 곡괭이로 캤을 때 피로도가 큰 묶음부터 정렬
-        groups.sort((a, b) -> {
-            int fatigueA = a[0] * 25 + a[1] * 5 + a[2];
-            int fatigueB = b[0] * 25 + b[1] * 5 + b[2];
-
-            return Integer.compare(fatigueB, fatigueA);
-        });
-
+        int[][] need={{1,1,1},
+                      {5,1,1},
+                      {25,5,1}};
         int answer = 0;
-
-        for (int[] group : groups) {
-            int pick;
-
-            if (picks[0] > 0) {
-                pick = 0;
-                picks[0]--;
-            } else if (picks[1] > 0) {
-                pick = 1;
-                picks[1]--;
-            } else {
-                pick = 2;
-                picks[2]--;
+        int total=0;
+        for(int p : picks) total+=p;
+        int max=Math.min(minerals.length, total*5); //최대로캘수있는 광물수
+                
+        List<int[]> list=new ArrayList<>();
+        for(int i=0;i<max;i+=5){
+            int dia=0;
+            int iron=0;
+            int stone=0;
+            int score=0;
+            for(int j=i;j<i+5&&j<max;j++){        
+                if(minerals[j].equals("diamond")) dia++;
+                else if(minerals[j].equals("iron")) iron++;
+                else stone++;
+                
+                score=25*dia+5*iron+stone;
             }
-
-            int diamond = group[0];
-            int iron = group[1];
-            int stone = group[2];
-
-            if (pick == 0) {
-                answer += diamond + iron + stone;
-            } else if (pick == 1) {
-                answer += diamond * 5 + iron + stone;
-            } else {
-                answer += diamond * 25 + iron * 5 + stone;
-            }
+            list.add(new int[]{dia,iron,stone,score});
         }
-
+        list.sort((a,b)-> b[3]-a[3]);
+        
+        int tool=0;
+        for(int[] l : list){
+            if(total==0) return answer;
+            
+            while(picks[tool]==0 && tool<2) tool++; //다음 곡괭이
+            answer+=(need[tool][0]*l[0]+need[tool][1]*l[1]+need[tool][2]*l[2]);
+            picks[tool]--;
+            total--;
+            
+        }
+        
         return answer;
     }
 }
