@@ -2,22 +2,19 @@ import java.util.*;
 
 class Solution {
     public int solution(int[][] targets) {
-        Arrays.sort(targets, (a, b) -> Integer.compare(a[1], b[1]));
-
         int answer = 0;
-        int intercept = -1;
-
-        for (int[] target : targets) {
-            int start = target[0];
-            int end = target[1];
-
-            // 기존 요격 지점으로 처리할 수 없는 경우
-            if (start >= intercept) {
+        Arrays.sort(targets, (a,b)-> a[1]==b[1] ? a[0]-b[0] : a[1]-b[1] );
+        
+        int need=-1;
+        for(int[] t : targets){
+            int start=t[0];
+            int end=t[1];
+            
+            if(start>=need){
                 answer++;
-                intercept = end;
+                need=end;
             }
         }
-
         return answer;
     }
 }
