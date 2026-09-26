@@ -1,6 +1,9 @@
 -- 코드를 작성해주세요
-SELECT I.ITEM_ID, ITEM_NAME
-FROM ITEM_INFO I JOIN ITEM_TREE T
-ON I.ITEM_ID=T.ITEM_ID
-WHERE T.PARENT_ITEM_ID IS NULL
-ORDER BY I.ITEM_ID
+select item_id, item_name
+from item_info 
+where item_id in (
+    select item_id
+    from item_tree
+    where parent_item_id is null
+)
+order by item_id
