@@ -2,34 +2,24 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] answers) {
-        List<Integer> list=new ArrayList<>();
-        int[][] p={{1,2,3,4,5},
-                   {2,1,2,3,2,4,2,5},
-                   {3,3,1,1,2,2,4,4,5,5}};
+        int[] answer = {};
+        int[] p1={1,2,3,4,5};
+        int[] p2={2,1,2,3,2,4,2,5};
+        int[] p3={3,3,1,1,2,2,4,4,5,5};
         
-        int[] cnt= new int[3];
+        int[] cnt=new int[3];
         
         for(int i=0;i<answers.length;i++){
-            if(answers[i]==p[0][i%5]) cnt[0]++;
-            if(answers[i]==p[1][i%8]) cnt[1]++;
-            if(answers[i]==p[2][i%10]) cnt[2]++;
+            if(answers[i]==p1[i%p1.length]) cnt[0]++;
+            if(answers[i]==p2[i%p2.length]) cnt[1]++;
+            if(answers[i]==p3[i%p3.length]) cnt[2]++;
         }
         
-        int max=cnt[0];
-        for(int c : cnt){
-            if(max<c) max=c;
+        int max= Math.max(cnt[0], Math.max(cnt[1],cnt[2]));
+        List<Integer> list=new ArrayList<>();
+        for(int i=0;i<3;i++){
+            if(cnt[i]==max) list.add(i+1);
         }
-        
-        for(int i=0;i<3; i++){
-            if(max==cnt[i]){
-                max=cnt[i];
-                System.out.println(i);
-                list.add(i+1);
-            }
-        }
-        
-        Collections.sort(list);
-        
         
         return list.stream().mapToInt(i->i).toArray();
     }
