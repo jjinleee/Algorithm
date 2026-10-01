@@ -1,38 +1,32 @@
 import java.util.*;
 
 class Solution {
-    char[][] map;
+    char[][] map=new char[3][3];
     public int solution(String[] board) {
-        int o=0;
-        int x=0;
+        int answer = -1;
+        int a=0;
+        int b=0;
         
-        map=new char[3][3];
-
         for(int i=0;i<3;i++){
             for(int j=0;j<3;j++){
-                char tmp=board[i].charAt(j);
-                if(tmp=='O') o++;
-                else if(tmp=='X') x++;
-                map[i][j]=tmp;
+                map[i][j]=board[i].charAt(j);
+                if(map[i][j]=='O') a++;
+                else if(map[i][j]=='X') b++;
             }
         }
-        //개수 틀림
-        if(o<x) return 0;
-        if(o>x+1) return 0;
         
-        boolean owin=win('O');
-        boolean xwin=win('X');
+        if(a-b>=2 || a<b)  return 0;
         
-        //이미 승패났는데 진행
-        if(owin && xwin) return 0;
-        if(owin && o!=x+1) return 0;
-        if(xwin && o!=x) return 0;
+        boolean aWin=winner('O');
+        boolean bWin=winner('X');
+        
+        if(aWin && a==b) return 0;
+        if(bWin && a-1==b) return 0;
+
         
         return 1;
-        
     }
-    boolean win(char c){ 
-        //좌우대각선
+    boolean winner(char c){
         for(int i=0;i<3;i++){
             if(map[i][0]==c && map[i][1]==c && map[i][2]==c) return true;
             
@@ -47,6 +41,6 @@ class Solution {
         if(map[0][2]==c && map[1][1]==c && map[2][0]==c) return true;
         
         return false;
-        
     }
+    
 }
