@@ -17,10 +17,9 @@ class Solution {
         //소요시간,번호 순 정렬
         PriorityQueue<Job> pq=new PriorityQueue<>((a,b)->{
             if(a.need==b.need){
-                if(a.start==b.start) return a.num-b.num;
-                return a.start-b.start;
+                return a.num-b.num;
             }
-            else return a.need-b.need;
+         return a.need-b.need;
         }
         );
         
