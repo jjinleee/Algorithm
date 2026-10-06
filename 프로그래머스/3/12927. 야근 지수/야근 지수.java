@@ -2,27 +2,22 @@ import java.util.*;
 
 class Solution {
     public long solution(int n, int[] works) {
-        long sum = 0;
-        PriorityQueue<Integer> q=new PriorityQueue<>(Collections.reverseOrder());
-        for(int w : works) {
-            sum+=w;
-            q.offer(w);
-        }
-        if(sum<=n) return 0; //작업모두마침
+        long answer = 0;
         
-        while(n>0){
-            q.offer(q.poll()-1);
+        PriorityQueue<Integer> pq=new PriorityQueue<>(Collections.reverseOrder());
+        for(int w : works) pq.offer(w);
+        
+        while(n>0 && !pq.isEmpty()){
+            int did=pq.poll()-1;
             n--;
+            if(did==0) continue;
+            
+            pq.offer(did);
         }
         
-        long answer=0;
-        for(int m:q) {
-            answer+=(long)m*m;
-            System.out.println(m);
+        for(int p : pq){
+            answer+=(long)Math.pow(p,2);
         }
-        
-        
-        
         return answer;
     }
 }
