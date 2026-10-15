@@ -1,10 +1,10 @@
 # [level 3] 부대복귀 - 132266 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/132266?utm_source=chatgpt.com) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/132266) 
 
 ### 성능 요약
 
-메모리: 207 MB, 시간: 95.85 ms
+메모리: 203 MB, 시간: 91.10 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2026년 09월 06일 13:09:49
+2026년 10월 15일 15:53:07
 
 ### 문제 설명
 
