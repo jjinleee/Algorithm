@@ -2,62 +2,50 @@ import java.util.*;
 
 class Solution {
     class Node{
-        int village;
-        int distance;
+        int to;
+        int cost;
         
-        Node(int village, int distance){
-            this.village=village;
-            this.distance=distance;
+        Node(int to, int cost){
+            this.to=to;
+            this.cost=cost;
         }
+        
     }
     public int solution(int N, int[][] road, int K) {
-        //그래프 초기화
-        List<Node>[] graph=new ArrayList[N+1];
-        for(int i=0;i<=N;i++) graph[i]=new ArrayList<>();
-    
-        //도로 정보 저장
-        for(int[] r : road){
-            int from=r[0];
-            int to=r[1];
-            int dist=r[2];
-            
-            graph[from].add(new Node(to, dist));
-            graph[to].add(new Node(from,dist));
+        int[] dist=new int[N+1];
+        Arrays.fill(dist,Integer.MAX_VALUE);
+        List<List<Node>> graph=new ArrayList<>();
+        for(int i=0;i<=N;i++) graph.add(new ArrayList<>());
+        
+        for(int[] r: road){
+            graph.get(r[0]).add(new Node(r[1],r[2]));
+            graph.get(r[1]).add(new Node(r[0],r[2]));
         }
         
-        PriorityQueue<Node> pq=new PriorityQueue<>(
-            (a,b)-> Integer.compare(a.distance, b.distance)
-        );
+        //비용순오름차순
+        PriorityQueue<Node> pq=new PriorityQueue<>((a,b)-> a.cost-b.cost);
         pq.offer(new Node(1,0));
-        
-        int[] dist=new int[N+1];
-        
-        Arrays.fill(dist, Integer.MAX_VALUE);
         dist[1]=0;
+        
         while(!pq.isEmpty()){
             Node cur=pq.poll();
             
-            int curVillage=cur.village;
-            int curDistance=cur.distance;
+            if(dist[cur.to]<cur.cost) continue;
             
-            if(curDistance>dist[curVillage]) continue;
-            
-            for(Node next : graph[curVillage]){
-                int newDistance=curDistance+next.distance;
+            for(Node next : graph.get(cur.to)){
+                int newCost=next.cost+cur.cost;
                 
-                //더짧은거리 발견
-                if(newDistance<dist[next.village]){
-                    dist[next.village]=newDistance;
-                    pq.offer(new Node(next.village, newDistance));
+                if(newCost<dist[next.to]){
+                    dist[next.to]=newCost;
+                    pq.offer(new Node(next.to, newCost));
                 }
             }
         }
-        
+
         int answer=0;
-        for(int i=1;i<=N;i++){
-            if(dist[i]<=K) answer++;
+        for(int d : dist){
+            if(d<=K) answer++;
         }
-        
 
         return answer;
     }
