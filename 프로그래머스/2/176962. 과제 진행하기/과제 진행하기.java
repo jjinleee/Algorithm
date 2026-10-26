@@ -4,69 +4,64 @@ class Solution {
     class Plan{
         String name;
         int start;
-        int playtime;
+        int remain;
         
-        Plan(String name, int start, int playtime){
+        Plan(String name,int start,int remain){
             this.name=name;
             this.start=start;
-            this.playtime=playtime;
+            this.remain=remain;
         }
     }
     public String[] solution(String[][] plans) {
-        List<String> answer=new ArrayList<>();
-        List<Plan> works=new ArrayList<>();
-        for(String[] p : plans){
-            String name=p[0];
-            int start=toTime(p[1]);
-            int playtime=Integer.parseInt(p[2]);
-            
-            works.add(new Plan(name, start, playtime));
-        }
-        
-        works.sort((a,b)-> Integer.compare(a.start,b.start));
-        Stack<Plan> stopped=new Stack<>();
+        Stack<Plan> stopped=new Stack<>();        
+        Arrays.sort(plans, (a,b)-> a[1].compareTo(b[1]));
         
         int n=plans.length;
+        String[] answer = new String[n];
+        int idx=0;
+        
         for(int i=0;i<n-1;i++){
-            Plan cur=works.get(i);
-            Plan next=works.get(i+1);
-            
+            Plan cur=new Plan(plans[i][0],toTime(plans[i][1]), Integer.parseInt(plans[i][2]));
+            Plan next=new Plan(plans[i+1][0],toTime(plans[i+1][1]), Integer.parseInt(plans[i+1][2]));
             int avail=next.start-cur.start;
-            if(avail>=cur.playtime){ //바로종료
-                answer.add(cur.name);
-                avail-=cur.playtime;
+            
+            if(cur.remain<=avail){ //바로완료
+                answer[idx++]=cur.name;
+                avail-=cur.remain;  
                 
-                //멈춘거
+                //중단했던 과제
                 while(!stopped.isEmpty() && avail>0){
                     Plan stop=stopped.pop();
-                    if(avail>=stop.playtime){
-                        answer.add(stop.name);
-                        avail-=stop.playtime;
+                    if(stop.remain<=avail){
+                        avail-=stop.remain;
+                        answer[idx++]=stop.name;
                     } else {
-                        stop.playtime-=avail;
+                        stop.remain-=avail;
                         stopped.push(stop);
-                        avail=0;
+                        avail=0; 
                     }
                 }
-            } else { //도중에 중단
-                cur.playtime-=avail;
+                
+            } else{ //중단
+                cur.remain-=avail;
                 stopped.push(cur);
-
             }
         }
-        //맨마지막거
-        answer.add(works.get(n-1).name);
         
-        //중단된거
+        //마지막 과제
+        answer[idx++]=plans[n-1][0];
+        
+        //중단했던과제 모두 완료
         while(!stopped.isEmpty()){
-            answer.add(stopped.pop().name);
+            answer[idx++]=stopped.pop().name;
         }
         
-        return answer.toArray(new String[0]);
-    }
-    int toTime(String time){
-        String[] tmp=time.split(":");
         
-        return 60*Integer.parseInt(tmp[0])+Integer.parseInt(tmp[1]);
+        return answer;
+    }
+    int toTime(String t){
+        String[] tmp=t.split(":");
+        
+        return  60*Integer.parseInt(tmp[0])+Integer.parseInt(tmp[1]);
     }
 }
