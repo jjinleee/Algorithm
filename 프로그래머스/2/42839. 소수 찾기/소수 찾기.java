@@ -1,40 +1,37 @@
 import java.util.*;
 
 class Solution {
-    Set<Integer> set=new HashSet<>();
+    Set<Integer> set= new HashSet<>();
     public int solution(String numbers) {
-        int answer = 0;
         int n=numbers.length();
         boolean[] visited=new boolean[n];
         
-        dfs(visited,"",numbers);
+        dfs(numbers, visited, "");
         
-        for(int s : set){
-            if(isPrime(s)) answer++;
+        return set.size();
+    }
+    void dfs(String numbers, boolean[] visited, String cur){
+        if(!cur.isEmpty()){
+            if(isPrime(cur)) set.add(Integer.parseInt(cur));
         }
         
-        return answer;
-    }
-    void dfs(boolean[] visited, String cur,String numbers){
+
         for(int i=0;i<numbers.length();i++){
             if(!visited[i]){
                 visited[i]=true;
-                
-                String next=cur+numbers.charAt(i);
-                set.add(Integer.parseInt(next));
-                dfs(visited, next,numbers);
+                dfs(numbers,  visited, cur+numbers.charAt(i));
                 visited[i]=false;
+                
             }
         }
     }
-    boolean isPrime(int n){
-        if(n<2) return false;
-        if(n==2 || n==3 || n==5) return true;
+    boolean isPrime(String n){
+        int num=Integer.parseInt(n);
+        if(num<2) return false;
+        if(num==2 || num==3 || num==5 || num==7) return true;
         
-        if(n%2==0 || n%3==0 || n%5==0) return false;
-
-        for(int i=7;i*i<=n;i++){
-            if(n%i==0) return false;
+        for(int i=2;i*i<=num;i++){
+            if(num%i==0) return false;
         }
         
         return true;
