@@ -2,39 +2,28 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int N, int[] stages) {
-        int[] count = new int[N+2];
-        int total=stages.length;
+        Map<Integer,Double> map=new HashMap<>();//실패율,단계
+        for(int i=1;i<=N; i++) map.put(i,0.0);
         
-        for(int s : stages){
-            if(s<=N) count[s]++;
-        }
-        
-        double[] fail=new double[N+1];
+    
         for(int i=1;i<=N;i++){
-            if(total==0) fail[i]=0.0;
-            else{
-                fail[i]=(double)count[i]/total;
-                total-=count[i];
+            int a=0;
+            int b=0;
+            for(int s : stages){
+                if(s>=i) a++;
+                if(s==i) b++;
             }
-            
-        }
-        Integer[] order=new Integer[N];
-        for(int i=0;i<N;i++){
-            order[i]=i+1;
+            if(b!=0) map.put(i,(double)b/a);
         }
         
-        Arrays.sort(order, (a,b)-> {
-            if(fail[b]>fail[a]) return 1;
-            else if (fail[b]<fail[a]) return -1;
-            else return Integer.compare(a,b);
-        });
-            
+        List<Map.Entry<Integer,Double>> list=new ArrayList<>(map.entrySet());
+        list.sort((a,b)-> Double.compare(b.getValue(),a.getValue()));
         int[] answer=new int[N];
-        for(int i=0;i<N;i++){
-            answer[i]=order[i];
+        int idx=0;
+        for(Map.Entry<Integer,Double> l : list){
+            answer[idx++]=l.getKey();
         }
-            
-            
+        
         return answer;
     }
 }
