@@ -2,57 +2,48 @@ import java.util.*;
 
 class Solution {
     class File{
-        int order;
         String head;
         int number;
+        int order;
         String origin;
         
-        File(int order, String head, int number, String origin){
-            this.order=order;
+        File(String head, int number, int order, String origin){
             this.head=head;
             this.number=number;
+            this.order=order;
             this.origin=origin;
         }
     }
     public String[] solution(String[] files) {
         List<File> list=new ArrayList<>();
         
-        for(int i=0;i<files.length;i++){
-            String cur=files[i];
-            int j=0;
+        for(int idx=0;idx<files.length;idx++){
+            String f=files[idx];
+            int i=0;
+            while(i<f.length() && !Character.isDigit(f.charAt(i)) ) i++;
+            String head=f.substring(0,i).toLowerCase();
             
-            while(j<cur.length() && !Character.isDigit(cur.charAt(j))){ 
-                j++; 
-            }
+            int j=i;
+            while(j<f.length() && Character.isDigit(f.charAt(j)) ) j++;
+            int num=Integer.parseInt(f.substring(i,j));
             
-            String head=cur.substring(0,j).toLowerCase();
-            int k=j;
-            while(k<cur.length() && Character.isDigit(cur.charAt(k)) && k-j<5){
-                    k++;
-            }
-            int number=Integer.parseInt(cur.substring(j,k));
-            
-            
-            list.add(new File(i,head, number, cur));
+            list.add(new File(head, num, idx, f));
         }
         
-        Collections.sort(list, (a,b)-> {
-            int cnt=a.head.compareTo(b.head);
-            if(cnt==0){
-                if(a.number==b.number) return a.order-b.order;
-                return a.number-b.number;
-            }
-            
-            return cnt;
+        list.sort((a,b)-> {
+            if(a.head.equals(b.head)){
+                if(a.number==b.number){
+                    return a.order-b.order;
+                } else return a.number-b.number;
+            } else return a.head.compareTo(b.head);
         });
         
-        String[] answer=new String[files.length];
-        int idx=0;
-        for(File f : list){
-            answer[idx++]=f.origin;
+        String[] answer=new String[list.size()];
+        int o=0;
+        for(File l : list){
+            answer[o++]=l.origin;
         }
-        
-        
+            
         return answer;
     }
 }
