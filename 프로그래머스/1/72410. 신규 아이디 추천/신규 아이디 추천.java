@@ -1,26 +1,20 @@
+import java.util.*;
+
 class Solution {
     public String solution(String new_id) {
-        String answer = "";
-        //1단계:소문자로변경
-        String s=new_id.toLowerCase();
-        //2단계: 금지문자제거
-        s=s.replaceAll("[^a-z0-9-_.]","");
-        //3단계 : 마침표 연속2개 1개로치환
-        s = s.replaceAll("\\.{2,}", "."); 
-        //4단계 : 마침표 처음과 끝 제거
-        s = s.replaceAll("^\\.|\\.$", "");
-        //5단계 : 빈문자열 a
-        if(s.isEmpty()) s="a";
-        //6단계 : 길이>=16 ->첫15자만
-        if(s.length()>=16){
-            s=s.substring(0,15);
-            s=s.replaceAll("\\.$",""); //끝마침표제거
+        new_id=new_id.toLowerCase(); //1단계 : 소문자로치환
+        new_id=new_id.replaceAll("[^a-z0-9-_.]",""); //2단계 : 소문자,숫자,-,_,.빼고 제거
+        new_id=new_id.replaceAll("\\.{2,}","\\.");//3단계 : .2연속 치환
+        new_id=new_id.replaceAll("^\\.|\\.$",""); //4단계 : 처음,끝 . 제거
+        if(new_id.isEmpty()) new_id="a"; //5단계 : 빈문자열일시 a
+        if(new_id.length()>=16){
+            new_id=new_id.substring(0,15).replaceAll("^\\.|\\.$","");//6
         }
-        //7단계 : 길이<=2 ->마지막문자 반복
-        while(s.length()<3){
-            s+=s.charAt(s.length()-1);
+        if(new_id.length()<=2){ //7
+            char c=new_id.charAt(new_id.length()-1);
+            int cnt=3-new_id.length();
+            for(int i=0;i<cnt;i++) new_id+=c;
         }
-        
-        return s;
+        return new_id;
     }
 }
