@@ -1,6 +1,9 @@
 -- 코드를 입력하세요
-SELECT hour(datetime) as hour, count(*) as count
-from animal_outs
-where hour(datetime) between 9 and 19
-group by hour(datetime)
-order by hour
+SELECT H.HOUR, COUNT(ANIMAL_ID) AS COUNT
+FROM ANIMAL_OUTS O RIGHT JOIN (
+SELECT LEVEL+8 AS HOUR
+FROM DUAL
+CONNECT BY LEVEL<=11
+) H ON TO_NUMBER(TO_CHAR(O.DATETIME,'HH24'))=H.HOUR
+GROUP BY H.HOUR
+ORDER BY HOUR
