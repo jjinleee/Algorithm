@@ -1,6 +1,6 @@
 -- 코드를 입력하세요
-SELECT a.apnt_no, pt_name, a.pt_no, a.mcdp_cd, dr_name, apnt_ymd
-from patient p join appointment a on p.pt_no=a.pt_no
-join doctor d on a.mddr_id=d.dr_id
-where a.mcdp_cd='CS' and apnt_cncl_yn='N' and date(apnt_ymd)='2022-04-13'
-order by apnt_ymd
+SELECT APNT_NO, PT_NAME, A.PT_NO, A.MCDP_CD, DR_NAME, APNT_YMD
+FROM PATIENT P JOIN APPOINTMENT A ON P.PT_NO=A.PT_NO
+JOIN DOCTOR D ON A.MDDR_ID=D.DR_ID
+WHERE TO_CHAR(APNT_YMD,'YYYY-MM-DD') ='2022-04-13' AND APNT_CNCL_YN='N' AND A.MCDP_CD='CS'
+ORDER BY APNT_YMD
